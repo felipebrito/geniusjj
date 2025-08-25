@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genius JJ - Jogo de Memória</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <div class="score-display">
+            <div class="score-circle">
+                <span class="score-number" id="score">0</span>
+                <span class="score-label">PONTOS</span>
+                <span class="record-label">RECORDE: <span id="record">0</span></span>
+            </div>
+        </div>
+        
+        <div class="game-buttons">
+            <button class="game-button button-1" data-color="red" data-sound="440">
+                <span class="button-inner"></span>
+            </button>
+            <button class="game-button button-2" data-color="blue" data-sound="494">
+                <span class="button-inner"></span>
+            </button>
+            <button class="game-button button-3" data-color="green" data-sound="554">
+                <span class="button-inner"></span>
+            </button>
+            <button class="game-button button-4" data-color="yellow" data-sound="587">
+                <span class="button-inner"></span>
+            </button>
+            <button class="game-button button-5" data-color="purple" data-sound="659">
+                <span class="button-inner"></span>
+            </button>
+            <button class="game-button button-6" data-color="orange" data-sound="698">
+                <span class="button-inner"></span>
+            </button>
+        </div>
+        
+        <div class="confetti-container" id="confettiContainer"></div>
+        
+        <div class="game-status">
+            <div class="status-text" id="statusText">Pressione qualquer tecla ou botão do gamepad para começar!</div>
+            <div class="level-display">Nível: <span id="level">1</span></div>
+        </div>
+    </div>
+    
+    <!-- Modal de Configurações -->
+    <div id="configModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Configurações</h2>
+                <span class="close" onclick="window.game.closeConfigModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="config-section">
+                    <h3>🎨 Aparência</h3>
+                    <div class="config-item">
+                        <label>Tema:</label>
+                        <select id="themeSelect">
+                            <option value="default">Padrão</option>
+                            <option value="dark">Escuro</option>
+                            <option value="light">Claro</option>
+                            <option value="neon">Neon</option>
+                        </select>
+                    </div>
+                    <div class="config-item">
+                        <label>Tempo de Inatividade:</label>
+                        <input type="range" id="inactivitySlider" min="3" max="15" value="5" step="1">
+                        <span id="inactivityValue">5 segundos</span>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3>🎵 Som</h3>
+                    <div class="config-item">
+                        <label>Volume:</label>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="30" step="5">
+                        <span id="volumeValue">30%</span>
+                    </div>
+                    <div class="config-item">
+                        <label>Ativar Som:</label>
+                        <input type="checkbox" id="soundEnabled" checked>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3>🔌 Comunicação</h3>
+                    <div class="config-item">
+                        <label>Host UDP:</label>
+                        <input type="text" id="udpHost" placeholder="127.0.0.1" value="127.0.0.1">
+                    </div>
+                    <div class="config-item">
+                        <label>Porta:</label>
+                        <input type="text" id="udpPort" placeholder="3000" value="3000" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="window.game.saveConfig()" class="btn-primary">💾 Salvar</button>
+                <button onclick="window.game.resetConfig()" class="btn-secondary">🔄 Padrão</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Relatório -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>📊 Relatório de Partidas</h2>
+                <span class="close" onclick="window.game.closeReportModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="report-controls">
+                    <button onclick="window.game.exportReport()" class="btn-primary">📥 Exportar CSV</button>
+                    <button onclick="window.game.printReport()" class="btn-secondary">🖨️ Imprimir</button>
+                    <button onclick="window.game.clearHistory()" class="btn-danger">🗑️ Limpar Histórico</button>
+                </div>
+                
+                <div class="report-summary">
+                    <div class="summary-card">
+                        <h3>Total de Partidas</h3>
+                        <span id="totalGames">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Recorde</h3>
+                        <span id="bestScore">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Média</h3>
+                        <span id="averageScore">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Jogadores</h3>
+                        <span id="totalPlayers">0</span>
+                    </div>
+                </div>
+                
+                <div class="report-table-container">
+                    <table id="gamesTable" class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Jogador</th>
+                                <th>Pontuação</th>
+                                <th>Nível</th>
+                                <th>Duração</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gamesTableBody">
+                            <!-- Dados serão inseridos via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
