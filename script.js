@@ -1288,16 +1288,17 @@ class GeniusGame {
                 console.log(`  ${colorNames[gameButton]} (${gameButton}) → Gamepad botão ${this.gamepadMapping[gameButton]}`);
             }
         } else {
-            // Mapeamento padrão
+            // Mapeamento padrão baseado na posição visual
+            // 1=Vermelho(top-left), 2=Branco(top-right), 3=Âmbar(middle-left), 4=Azul(middle-right), 5=Amarelo(bottom-left), 6=Verde(bottom-right)
             this.gamepadMapping = {
-                0: 0, // Vermelho
-                1: 1, // Branco
-                2: 2, // Âmbar
-                3: 3, // Azul
-                4: 4, // Amarelo
-                5: 5  // Verde
+                0: 0, // Vermelho (1) → Gamepad botão 0
+                1: 1, // Branco (2) → Gamepad botão 1
+                2: 2, // Âmbar (3) → Gamepad botão 2
+                3: 3, // Azul (4) → Gamepad botão 3
+                4: 4, // Amarelo (5) → Gamepad botão 4
+                5: 5  // Verde (6) → Gamepad botão 5
             };
-            console.log('🎮 Usando mapeamento padrão do gamepad');
+            console.log('🎮 Usando mapeamento padrão do gamepad (baseado na posição visual)');
         }
     }
 
@@ -1311,20 +1312,29 @@ class GeniusGame {
         
         // Mostrar confirmação
         console.log('✅ Mapeamento do gamepad salvo com sucesso!');
+        console.log('🎮 Mapeamento final salvo:', this.gamepadMapping);
     }
 
     // Resetar mapeamento do gamepad
     resetGamepadMapping() {
+        // Mapeamento padrão baseado na posição visual
         this.gamepadMapping = {
-            0: 0, // Vermelho
-            1: 1, // Branco
-            2: 2, // Âmbar
-            3: 3, // Azul
-            4: 4, // Amarelo
-            5: 5  // Verde
+            0: 0, // Vermelho (1) → Gamepad botão 0
+            1: 1, // Branco (2) → Gamepad botão 1
+            2: 2, // Âmbar (3) → Gamepad botão 2
+            3: 3, // Azul (4) → Gamepad botão 3
+            4: 4, // Amarelo (5) → Gamepad botão 4
+            5: 5  // Verde (6) → Gamepad botão 5
         };
         this.updateMappingDisplay();
-        console.log('🎮 Mapeamento do gamepad resetado para padrão');
+        console.log('🎮 Mapeamento do gamepad resetado para padrão (baseado na posição visual)');
+    }
+    
+    // Limpar mapeamento e forçar padrão
+    clearGamepadMapping() {
+        localStorage.removeItem('gamepadMapping');
+        this.loadGamepadMapping();
+        console.log('🎮 Mapeamento limpo e recarregado com padrão');
     }
 
     // Atualizar display do mapeamento
