@@ -658,13 +658,14 @@ class GeniusGame {
         if (!this.gamepad) return;
         
         // Mapear botões do gamepad para botões do jogo
-        // Botões 0-5 (1,2,3,4,5,6 no gamepad)
+        // Mapeamento: gamepad botão 0-5 → button 0-5 (sequência visual)
+        // 0→1(vermelho), 1→2(branco), 2→3(âmbar), 3→4(azul), 4→5(amarelo), 5→6(verde)
         for (let i = 0; i < 6; i++) {
             if (this.gamepad.buttons[i] && this.gamepad.buttons[i].pressed) {
                 // Evitar múltiplos cliques
                 if (!this.gamepadButtonStates[i]) {
                     this.gamepadButtonStates[i] = true;
-                    console.log(`🎮 Gamepad botão ${i} pressionado!`);
+                    console.log(`🎮 Gamepad botão ${i} pressionado! (mapeado para button ${i})`);
                     
                     // Se não estiver jogando, qualquer botão inicia o jogo
                     if (!this.isPlaying && !this.gameOver) {
