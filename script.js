@@ -18,6 +18,12 @@ class GeniusGame {
         this.gamepadPollingInterval = null;
         this.gamepadButtonStates = {};
         
+        // Configurador de Gamepad
+        this.gamepadMapping = {};
+        this.isConfiguringGamepad = false;
+        this.currentMappingButton = null;
+        this.gamepadConfigPollingInterval = null;
+        
         // UDP Communication
         this.udpSocket = null;
         this.wsSocket = null;
@@ -1350,38 +1356,58 @@ function addButtonGlowEffects() {
     });
 }
 
-// ===== CONFIGURADOR DE GAMEPAD =====
-
-// Variáveis para o configurador de gamepad
-let gamepadMapping = {};
-let isConfiguringGamepad = false;
-let currentMappingButton = null;
-let gamepadConfigPollingInterval = null;
-
-// Inicializar configurador de gamepad
-function initGamepadConfigurator() {
-    // Carregar mapeamento salvo
-    this.loadGamepadMapping();
+    // ===== CONFIGURADOR DE GAMEPAD =====
     
-    // Atualizar status do gamepad
-    this.updateGamepadStatus();
-    
-    // Bind eventos do configurador
-    this.bindGamepadConfigEvents();
-    
-    console.log('🎮 Configurador de gamepad inicializado');
-}
+    // Inicializar configurador de gamepad
+    initGamepadConfigurator() {
+        // Carregar mapeamento salvo
+        this.loadGamepadMapping();
+        
+        // Atualizar status do gamepad
+        this.updateGamepadStatus();
+        
+        // Bind eventos do configurador
+        this.bindGamepadConfigEvents();
+        
+        console.log('🎮 Configurador de gamepad inicializado');
+    }
 
-// Carregar mapeamento do gamepad do localStorage
-function loadGamepadMapping() {
-    const saved = localStorage.getItem('gamepadMapping');
-    if (saved) {
-        gamepadMapping = JSON.parse(saved);
-        this.updateMappingDisplay();
-        console.log('🎮 Mapeamento do gamepad carregado:', gamepadMapping);
-    } else {
-        // Mapeamento padrão
-        gamepadMapping = {
+    // Carregar mapeamento do gamepad do localStorage
+    loadGamepadMapping() {
+        const saved = localStorage.getItem('gamepadMapping');
+        if (saved) {
+            this.gamepadMapping = JSON.parse(saved);
+            this.updateMappingDisplay();
+            console.log('🎮 Mapeamento do gamepad carregado:', this.gamepadMapping);
+        } else {
+            // Mapeamento padrão
+            this.gamepadMapping = {
+                0: 0, // Vermelho
+                1: 1, // Branco
+                2: 2, // Âmbar
+                3: 3, // Azul
+                4: 4, // Amarelo
+                5: 5  // Verde
+            };
+            console.log('🎮 Usando mapeamento padrão do gamepad');
+        }
+    }
+
+    // Salvar mapeamento do gamepad no localStorage
+    saveGamepadMapping() {
+        localStorage.setItem('gamepadMapping', JSON.stringify(this.gamepadMapping));
+        console.log('🎮 Mapeamento do gamepad salvo:', this.gamepadMapping);
+        
+        // Fechar modal
+        this.closeGamepadConfigModal();
+        
+        // Mostrar confirmação
+        this.showNotification('Mapeamento do gamepad salvo com sucesso!', 'success');
+    }
+
+    // Resetar mapeamento do gamepad
+    resetGamepadMapping() {
+        this.gamepadMapping = {
             0: 0, // Vermelho
             1: 1, // Branco
             2: 2, // Âmbar
@@ -1389,205 +1415,179 @@ function loadGamepadMapping() {
             4: 4, // Amarelo
             5: 5  // Verde
         };
-        console.log('🎮 Usando mapeamento padrão do gamepad');
+        this.updateMappingDisplay();
+        console.log('🎮 Mapeamento do gamepad resetado para padrão');
     }
-}
 
-// Salvar mapeamento do gamepad no localStorage
-function saveGamepadMapping() {
-    localStorage.setItem('gamepadMapping', JSON.stringify(gamepadMapping));
-    console.log('🎮 Mapeamento do gamepad salvo:', gamepadMapping);
-    
-    // Fechar modal
-    this.closeGamepadConfigModal();
-    
-    // Mostrar confirmação
-    this.showNotification('Mapeamento do gamepad salvo com sucesso!', 'success');
-}
-
-// Resetar mapeamento do gamepad
-function resetGamepadMapping() {
-    gamepadMapping = {
-        0: 0, // Vermelho
-        1: 1, // Branco
-        2: 2, // Âmbar
-        3: 3, // Azul
-        4: 4, // Amarelo
-        5: 5  // Verde
-    };
-    this.updateMappingDisplay();
-    console.log('🎮 Mapeamento do gamepad resetado para padrão');
-}
-
-// Atualizar display do mapeamento
-function updateMappingDisplay() {
-    for (let i = 0; i < 6; i++) {
-        const mappingItem = document.querySelector(`[data-button="${i}"]`);
-        const mappedButtonSpan = mappingItem.querySelector('.mapped-button');
-        
-        if (gamepadMapping[i] !== undefined) {
-            mappedButtonSpan.textContent = `Botão ${gamepadMapping[i]}`;
-            mappingItem.classList.add('mapped');
-        } else {
-            mappedButtonSpan.textContent = 'Não mapeado';
-            mappingItem.classList.remove('mapped');
+    // Atualizar display do mapeamento
+    updateMappingDisplay() {
+        for (let i = 0; i < 6; i++) {
+            const mappingItem = document.querySelector(`[data-button="${i}"]`);
+            const mappedButtonSpan = mappingItem.querySelector('.mapped-button');
+            
+            if (this.gamepadMapping[i] !== undefined) {
+                mappedButtonSpan.textContent = `Botão ${this.gamepadMapping[i]}`;
+                mappingItem.classList.add('mapped');
+            } else {
+                mappedButtonSpan.textContent = 'Não mapeado';
+                mappingItem.classList.remove('mapped');
+            }
         }
     }
-}
 
-// Bind eventos do configurador
-function bindGamepadConfigEvents() {
-    // Botão para abrir configurador
-    const gamepadConfigBtn = document.getElementById('gamepadConfigBtn');
-    if (gamepadConfigBtn) {
-        gamepadConfigBtn.addEventListener('click', () => {
-            this.openGamepadConfigModal();
+    // Bind eventos do configurador
+    bindGamepadConfigEvents() {
+        // Botão para abrir configurador
+        const gamepadConfigBtn = document.getElementById('gamepadConfigBtn');
+        if (gamepadConfigBtn) {
+            gamepadConfigBtn.addEventListener('click', () => {
+                this.openGamepadConfigModal();
+            });
+        }
+        
+        // Clique nos itens de mapeamento
+        document.querySelectorAll('.mapping-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const buttonIndex = parseInt(item.dataset.button);
+                this.startGamepadMapping(buttonIndex);
+            });
         });
     }
-    
-    // Clique nos itens de mapeamento
-    document.querySelectorAll('.mapping-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const buttonIndex = parseInt(item.dataset.button);
-            this.startGamepadMapping(buttonIndex);
+
+    // Abrir modal de configuração do gamepad
+    openGamepadConfigModal() {
+        const modal = document.getElementById('gamepadConfigModal');
+        if (modal) {
+            modal.style.display = 'block';
+            this.updateGamepadStatus();
+            this.updateMappingDisplay();
+            console.log('🎮 Modal de configuração do gamepad aberto');
+        }
+    }
+
+    // Fechar modal de configuração do gamepad
+    closeGamepadConfigModal() {
+        const modal = document.getElementById('gamepadConfigModal');
+        if (modal) {
+            modal.style.display = 'none';
+            this.stopGamepadMapping();
+            console.log('🎮 Modal de configuração do gamepad fechado');
+        }
+    }
+
+    // Iniciar mapeamento de um botão
+    startGamepadMapping(buttonIndex) {
+        if (this.isConfiguringGamepad) {
+            this.stopGamepadMapping();
+        }
+        
+        this.currentMappingButton = buttonIndex;
+        this.isConfiguringGamepad = true;
+        
+        // Atualizar UI
+        document.querySelectorAll('.mapping-item').forEach(item => {
+            item.classList.remove('waiting');
         });
-    });
-}
+        
+        const mappingItem = document.querySelector(`[data-button="${buttonIndex}"]`);
+        mappingItem.classList.add('waiting');
+        
+        // Atualizar status
+        const statusElement = document.getElementById('gamepadConfigStatus');
+        if (statusElement) {
+            const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
+            statusElement.textContent = `Aguardando botão do gamepad para ${colorNames[buttonIndex]}...`;
+        }
+        
+        // Iniciar polling do gamepad
+        this.startGamepadConfigPolling();
+        
+        console.log(`🎮 Iniciando mapeamento para botão ${buttonIndex}`);
+    }
 
-// Abrir modal de configuração do gamepad
-function openGamepadConfigModal() {
-    const modal = document.getElementById('gamepadConfigModal');
-    if (modal) {
-        modal.style.display = 'block';
-        this.updateGamepadStatus();
-        this.updateMappingDisplay();
-        console.log('🎮 Modal de configuração do gamepad aberto');
+    // Parar mapeamento
+    stopGamepadMapping() {
+        this.isConfiguringGamepad = false;
+        this.currentMappingButton = null;
+        
+        // Parar polling
+        if (this.gamepadConfigPollingInterval) {
+            clearInterval(this.gamepadConfigPollingInterval);
+            this.gamepadConfigPollingInterval = null;
+        }
+        
+        // Atualizar UI
+        document.querySelectorAll('.mapping-item').forEach(item => {
+            item.classList.remove('waiting');
+        });
+        
+        // Atualizar status
+        const statusElement = document.getElementById('gamepadConfigStatus');
+        if (statusElement) {
+            statusElement.textContent = 'Clique em uma cor para começar o mapeamento...';
+        }
+        
+        console.log('🎮 Mapeamento do gamepad parado');
     }
-}
 
-// Fechar modal de configuração do gamepad
-function closeGamepadConfigModal() {
-    const modal = document.getElementById('gamepadConfigModal');
-    if (modal) {
-        modal.style.display = 'none';
-        this.stopGamepadMapping();
-        console.log('🎮 Modal de configuração do gamepad fechado');
+    // Iniciar polling do gamepad para configuração
+    startGamepadConfigPolling() {
+        this.gamepadConfigPollingInterval = setInterval(() => {
+            const gamepads = navigator.getGamepads();
+            const gamepad = gamepads[0];
+            
+            if (gamepad && this.isConfiguringGamepad && this.currentMappingButton !== null) {
+                // Verificar todos os botões
+                for (let i = 0; i < gamepad.buttons.length; i++) {
+                    if (gamepad.buttons[i] && gamepad.buttons[i].pressed) {
+                        // Mapear botão do gamepad para botão do jogo
+                        this.gamepadMapping[this.currentMappingButton] = i;
+                        
+                        // Atualizar display
+                        this.updateMappingDisplay();
+                        
+                        // Parar mapeamento
+                        this.stopGamepadMapping();
+                        
+                        // Atualizar status
+                        const statusElement = document.getElementById('gamepadConfigStatus');
+                        if (statusElement) {
+                            const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
+                            statusElement.textContent = `${colorNames[this.currentMappingButton]} mapeado para botão ${i} do gamepad!`;
+                        }
+                        
+                        console.log(`🎮 Botão ${this.currentMappingButton} mapeado para gamepad botão ${i}`);
+                        break;
+                    }
+                }
+            }
+        }, 50); // 50ms para responsividade
     }
-}
 
-// Iniciar mapeamento de um botão
-function startGamepadMapping(buttonIndex) {
-    if (isConfiguringGamepad) {
-        this.stopGamepadMapping();
-    }
-    
-    currentMappingButton = buttonIndex;
-    isConfiguringGamepad = true;
-    
-    // Atualizar UI
-    document.querySelectorAll('.mapping-item').forEach(item => {
-        item.classList.remove('waiting');
-    });
-    
-    const mappingItem = document.querySelector(`[data-button="${buttonIndex}"]`);
-    mappingItem.classList.add('waiting');
-    
-    // Atualizar status
-    const statusElement = document.getElementById('gamepadConfigStatus');
-    if (statusElement) {
-        const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
-        statusElement.textContent = `Aguardando botão do gamepad para ${colorNames[buttonIndex]}...`;
-    }
-    
-    // Iniciar polling do gamepad
-    this.startGamepadConfigPolling();
-    
-    console.log(`🎮 Iniciando mapeamento para botão ${buttonIndex}`);
-}
-
-// Parar mapeamento
-function stopGamepadMapping() {
-    isConfiguringGamepad = false;
-    currentMappingButton = null;
-    
-    // Parar polling
-    if (gamepadConfigPollingInterval) {
-        clearInterval(gamepadConfigPollingInterval);
-        gamepadConfigPollingInterval = null;
-    }
-    
-    // Atualizar UI
-    document.querySelectorAll('.mapping-item').forEach(item => {
-        item.classList.remove('waiting');
-    });
-    
-    // Atualizar status
-    const statusElement = document.getElementById('gamepadConfigStatus');
-    if (statusElement) {
-        statusElement.textContent = 'Clique em uma cor para começar o mapeamento...';
-    }
-    
-    console.log('🎮 Mapeamento do gamepad parado');
-}
-
-// Iniciar polling do gamepad para configuração
-function startGamepadConfigPolling() {
-    gamepadConfigPollingInterval = setInterval(() => {
+    // Atualizar status do gamepad
+    updateGamepadStatus() {
+        const statusElement = document.getElementById('gamepadStatus');
+        if (!statusElement) return;
+        
         const gamepads = navigator.getGamepads();
         const gamepad = gamepads[0];
         
-        if (gamepad && isConfiguringGamepad && currentMappingButton !== null) {
-            // Verificar todos os botões
-            for (let i = 0; i < gamepad.buttons.length; i++) {
-                if (gamepad.buttons[i] && gamepad.buttons[i].pressed) {
-                    // Mapear botão do gamepad para botão do jogo
-                    gamepadMapping[currentMappingButton] = i;
-                    
-                    // Atualizar display
-                    this.updateMappingDisplay();
-                    
-                    // Parar mapeamento
-                    this.stopGamepadMapping();
-                    
-                    // Atualizar status
-                    const statusElement = document.getElementById('gamepadConfigStatus');
-                    if (statusElement) {
-                        const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
-                        statusElement.textContent = `${colorNames[currentMappingButton]} mapeado para botão ${i} do gamepad!`;
-                    }
-                    
-                    console.log(`🎮 Botão ${currentMappingButton} mapeado para gamepad botão ${i}`);
-                    break;
-                }
+        if (gamepad) {
+            statusElement.textContent = `Conectado: ${gamepad.id}`;
+            statusElement.style.color = '#00ff00';
+        } else {
+            statusElement.textContent = 'Nenhum gamepad detectado';
+            statusElement.style.color = '#ff6b6b';
+        }
+    }
+
+    // Aplicar mapeamento personalizado no polling do gamepad
+    applyCustomGamepadMapping(gamepadButtonIndex) {
+        // Encontrar qual botão do jogo está mapeado para este botão do gamepad
+        for (let gameButton in this.gamepadMapping) {
+            if (this.gamepadMapping[gameButton] === gamepadButtonIndex) {
+                return parseInt(gameButton);
             }
         }
-    }, 50); // 50ms para responsividade
-}
-
-// Atualizar status do gamepad
-function updateGamepadStatus() {
-    const statusElement = document.getElementById('gamepadStatus');
-    if (!statusElement) return;
-    
-    const gamepads = navigator.getGamepads();
-    const gamepad = gamepads[0];
-    
-    if (gamepad) {
-        statusElement.textContent = `Conectado: ${gamepad.id}`;
-        statusElement.style.color = '#00ff00';
-    } else {
-        statusElement.textContent = 'Nenhum gamepad detectado';
-        statusElement.style.color = '#ff6b6b';
+        return gamepadButtonIndex; // Fallback para mapeamento direto
     }
-}
-
-// Aplicar mapeamento personalizado no polling do gamepad
-function applyCustomGamepadMapping(gamepadButtonIndex) {
-    // Encontrar qual botão do jogo está mapeado para este botão do gamepad
-    for (let gameButton in gamepadMapping) {
-        if (gamepadMapping[gameButton] === gamepadButtonIndex) {
-            return parseInt(gameButton);
-        }
-    }
-    return gamepadButtonIndex; // Fallback para mapeamento direto
-}
