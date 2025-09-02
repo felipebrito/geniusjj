@@ -1282,6 +1282,11 @@ class GeniusGame {
             this.gamepadMapping = JSON.parse(saved);
             this.updateMappingDisplay();
             console.log('🎮 Mapeamento do gamepad carregado:', this.gamepadMapping);
+            console.log('🎮 Mapeamento detalhado:');
+            for (let gameButton in this.gamepadMapping) {
+                const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
+                console.log(`  ${colorNames[gameButton]} (${gameButton}) → Gamepad botão ${this.gamepadMapping[gameButton]}`);
+            }
         } else {
             // Mapeamento padrão
             this.gamepadMapping = {
@@ -1477,6 +1482,7 @@ class GeniusGame {
                             statusElement.style.fontWeight = 'bold';
                         }
                         
+                        const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
                         console.log(`🎮 Botão ${this.currentMappingButton} (${colorNames[this.currentMappingButton]}) mapeado para gamepad botão ${i}`);
                         break;
                     }
@@ -1510,9 +1516,11 @@ class GeniusGame {
         // Encontrar qual botão do jogo está mapeado para este botão do gamepad
         for (let gameButton in this.gamepadMapping) {
             if (this.gamepadMapping[gameButton] === gamepadButtonIndex) {
+                console.log(`🎮 Mapeamento aplicado: gamepad botão ${gamepadButtonIndex} → jogo botão ${gameButton}`);
                 return parseInt(gameButton);
             }
         }
+        console.log(`🎮 Mapeamento não encontrado para gamepad botão ${gamepadButtonIndex}, usando mapeamento direto`);
         return gamepadButtonIndex; // Fallback para mapeamento direto
     }
 }
