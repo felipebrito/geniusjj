@@ -1221,7 +1221,7 @@ class GeniusGame {
             // F4 - Configurador de Gamepad
             else if (e.key === 'F4') {
                 e.preventDefault();
-                this.openGamepadConfigModal();
+                this.startDirectSequentialConfiguration();
             }
             // F3 - Estatísticas (pode ser expandido)
             else if (e.key === 'F3') {
@@ -1436,7 +1436,21 @@ class GeniusGame {
         }
     }
 
-    // Iniciar configuração sequencial
+    // Iniciar configuração sequencial direta (sem modal)
+    startDirectSequentialConfiguration() {
+        this.isSequentialConfigMode = true;
+        this.sequentialConfigStep = 0;
+        this.gamepadMapping = {};
+        
+        // Mostrar notificação na tela principal
+        this.showNotification('🎮 CONFIGURAÇÃO SEQUENCIAL INICIADA', 'success');
+        this.showNotification('Pressione os botões do gamepad na ordem: VERMELHO → BRANCO → ÂMBAR → AZUL → AMARELO → VERDE', 'info');
+        
+        this.startGamepadConfigPolling();
+        console.log('🎮 Configuração sequencial direta iniciada - aguardando mapeamento dos botões 1-6');
+    }
+
+    // Iniciar configuração sequencial (com modal)
     startSequentialConfiguration() {
         this.isSequentialConfigMode = true;
         this.sequentialConfigStep = 0;
@@ -1606,22 +1620,67 @@ class GeniusGame {
             
             this.sequentialConfigStep++;
             
-            const statusElement = document.getElementById('gamepadConfigStatus');
-            if (statusElement) {
-                if (this.sequentialConfigStep < this.sequentialConfigOrder.length) {
-                    const nextColorNumber = this.sequentialConfigOrder[this.sequentialConfigStep];
-                    const nextColorName = colorNames[nextColorNumber];
-                    statusElement.innerHTML = `<strong style="color: #00ff00;">✅ ${colorName} mapeado para gamepad botão ${gamepadButtonIndex}</strong><br><br><strong style="color: #ff6b6b;">Próximo: ${nextColorName}</strong><br>Pressione o botão do gamepad que corresponde ao ${nextColorName.toUpperCase()}`;
-                } else {
-                    // Configuração completa
-                    statusElement.innerHTML = `<strong style="color: #00ff00;">🎉 CONFIGURAÇÃO COMPLETA!</strong><br><br>✅ ${colorName} mapeado para gamepad botão ${gamepadButtonIndex}<br><br><strong>Todos os botões foram mapeados com sucesso!</strong><br>Clique em "Salvar Mapeamento" para confirmar.`;
-                    this.stopSequentialConfiguration();
-                }
+            // Mostrar notificação na tela principal
+            this.showNotification(`✅ ${colorName} mapeado para gamepad botão ${gamepadButtonIndex}`, 'success');
+            
+            if (this.sequentialConfigStep < this.sequentialConfigOrder.length) {
+                const nextColorNumber = this.sequentialConfigOrder[this.sequentialConfigStep];
+                const nextColorName = colorNames[nextColorNumber];
+                this.showNotification(`Próximo: ${nextColorName.toUpperCase()}`, 'info');
+            } else {
+                // Configuração completa
+                this.showNotification('🎉 CONFIGURAÇÃO COMPLETA! Todos os botões foram mapeados!', 'success');
+                this.saveGamepadMapping();
+                this.stopSequentialConfiguration();
             }
             
             this.updateMappingDisplay();
             console.log(`🎮 ${colorName} (${currentColorNumber}) mapeado para gamepad botão ${gamepadButtonIndex} (passo ${this.sequentialConfigStep}/${this.sequentialConfigOrder.length})`);
         }
+    }
+
+    // Mostrar notificação na tela
+    showNotification(message, type = 'info') {
+        // Criar elemento de notificação se não existir
+        let notification = document.getElementById('gamepadNotification');
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.id = 'gamepadNotification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: bold;
+                z-index: 10000;
+                max-width: 400px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                border-left: 4px solid #0066ff;
+            `;
+            document.body.appendChild(notification);
+        }
+        
+        // Definir cor baseada no tipo
+        const colors = {
+            'success': '#00ff00',
+            'error': '#ff6b6b',
+            'info': '#0066ff',
+            'warning': '#ffbf00'
+        };
+        
+        notification.style.borderLeftColor = colors[type] || colors['info'];
+        notification.textContent = message;
+        
+        // Auto-remover após 3 segundos
+        setTimeout(() => {
+            if (notification && notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 3000);
     }
 
     // Atualizar status do gamepad
