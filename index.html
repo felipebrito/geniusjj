@@ -86,6 +86,18 @@
                 </div>
                 
                 <div class="config-section">
+                    <h3>🎮 Gamepad</h3>
+                    <div class="config-item">
+                        <label>Configurar Botões:</label>
+                        <button id="gamepadConfigBtn" class="config-btn">Configurar Mapeamento</button>
+                    </div>
+                    <div class="config-item">
+                        <label>Status:</label>
+                        <span id="gamepadStatus">Nenhum gamepad detectado</span>
+                    </div>
+                </div>
+                
+                <div class="config-section">
                     <h3>🔌 Comunicação</h3>
                     <div class="config-item">
                         <label>Host UDP:</label>
@@ -100,6 +112,64 @@
             <div class="modal-footer">
                 <button onclick="window.game.saveConfig()" class="btn-primary">💾 Salvar</button>
                 <button onclick="window.game.resetConfig()" class="btn-secondary">🔄 Padrão</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Configuração do Gamepad -->
+    <div id="gamepadConfigModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎮 Configurar Gamepad</h2>
+                <span class="close" onclick="window.game.closeGamepadConfigModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="gamepad-config-info">
+                    <p>Clique em uma cor abaixo e pressione o botão correspondente no seu gamepad para mapear.</p>
+                    <p><strong>Pressione F4 para abrir este configurador a qualquer momento.</strong></p>
+                </div>
+                
+                <div class="gamepad-mapping">
+                    <div class="mapping-item" data-button="0">
+                        <div class="color-preview color-red"></div>
+                        <span class="color-name">Vermelho (Botão 1)</span>
+                        <span class="mapped-button">Não mapeado</span>
+                    </div>
+                    <div class="mapping-item" data-button="1">
+                        <div class="color-preview color-white"></div>
+                        <span class="color-name">Branco (Botão 2)</span>
+                        <span class="mapped-button">Não mapeado</span>
+                    </div>
+                    <div class="mapping-item" data-button="2">
+                        <div class="color-preview color-amber"></div>
+                        <span class="color-name">Âmbar (Botão 3)</span>
+                        <span class="mapped-button">Não mapeado</span>
+                    </div>
+                    <div class="mapping-item" data-button="3">
+                        <div class="color-preview color-blue"></div>
+                        <span class="color-name">Azul (Botão 4)</span>
+                        <span class="mapped-button">Não mapeado</span>
+                    </div>
+                    <div class="mapping-item" data-button="4">
+                        <div class="color-preview color-yellow"></div>
+                        <span class="color-name">Amarelo (Botão 5)</span>
+                        <span class="mapped-button">Não mapeado</span>
+                    </div>
+                    <div class="mapping-item" data-button="5">
+                        <div class="color-preview color-green"></div>
+                        <span class="color-name">Verde (Botão 6)</span>
+                        <span class="mapped-button">Não mapeado</span>
+                    </div>
+                </div>
+                
+                <div class="gamepad-config-status">
+                    <p id="gamepadConfigStatus">Clique em uma cor para começar o mapeamento...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="window.game.saveGamepadMapping()" class="btn-primary">💾 Salvar Mapeamento</button>
+                <button onclick="window.game.resetGamepadMapping()" class="btn-secondary">🔄 Resetar</button>
+                <button onclick="window.game.closeGamepadConfigModal()" class="btn-secondary">❌ Cancelar</button>
             </div>
         </div>
     </div>

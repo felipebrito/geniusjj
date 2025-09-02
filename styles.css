@@ -746,3 +746,149 @@ body {
         padding: 6px;
     }
 }
+
+/* Estilos para o Configurador de Gamepad */
+.config-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.config-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.gamepad-config-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gamepad-config-info p {
+    margin: 5px 0;
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.gamepad-mapping {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.mapping-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.mapping-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.mapping-item.waiting {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.2);
+    animation: pulse 1s infinite;
+}
+
+.mapping-item.mapped {
+    border-color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+}
+
+.color-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+.color-red { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+.color-white { background: linear-gradient(135deg, #ffffff, #f0f0f0); }
+.color-amber { background: linear-gradient(135deg, #ffbf00, #ff8c00); }
+.color-blue { background: linear-gradient(135deg, #0066ff, #0044cc); }
+.color-yellow { background: linear-gradient(135deg, #ffff00, #ffcc00); }
+.color-green { background: linear-gradient(135deg, #00ff00, #00cc00); }
+
+.color-name {
+    flex: 1;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.mapped-button {
+    color: #00ff00;
+    font-weight: 700;
+    font-size: 0.8rem;
+    background: rgba(0, 255, 0, 0.2);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.gamepad-config-status {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gamepad-config-status p {
+    margin: 0;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Responsividade para o configurador */
+@media (max-width: 768px) {
+    .gamepad-mapping {
+        grid-template-columns: 1fr;
+    }
+    
+    .mapping-item {
+        padding: 12px;
+    }
+    
+    .color-preview {
+        width: 25px;
+        height: 25px;
+        margin-right: 10px;
+    }
+    
+    .color-name {
+        font-size: 0.8rem;
+    }
+    
+    .mapped-button {
+        font-size: 0.7rem;
+        padding: 3px 6px;
+    }
+}
