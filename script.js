@@ -1341,6 +1341,25 @@ class GeniusGame {
                 mappingItem.classList.remove('mapped');
             }
         }
+        
+        // Atualizar guia visual
+        this.updateMappingGuide();
+    }
+    
+    // Atualizar guia visual do mapeamento
+    updateMappingGuide() {
+        const guideElement = document.getElementById('mappingGuide');
+        if (guideElement) {
+            guideElement.innerHTML = `
+                <strong>🎮 GUIA DE MAPEAMENTO ATUAL:</strong><br>
+                <span style="color: #ff6b6b;">● Vermelho (0) → Gamepad botão ${this.gamepadMapping[0] !== undefined ? this.gamepadMapping[0] : '?'}</span><br>
+                <span style="color: #ffffff;">● Branco (1) → Gamepad botão ${this.gamepadMapping[1] !== undefined ? this.gamepadMapping[1] : '?'}</span><br>
+                <span style="color: #ffbf00;">● Âmbar (2) → Gamepad botão ${this.gamepadMapping[2] !== undefined ? this.gamepadMapping[2] : '?'}</span><br>
+                <span style="color: #0066ff;">● Azul (3) → Gamepad botão ${this.gamepadMapping[3] !== undefined ? this.gamepadMapping[3] : '?'}</span><br>
+                <span style="color: #ffff00;">● Amarelo (4) → Gamepad botão ${this.gamepadMapping[4] !== undefined ? this.gamepadMapping[4] : '?'}</span><br>
+                <span style="color: #00ff00;">● Verde (5) → Gamepad botão ${this.gamepadMapping[5] !== undefined ? this.gamepadMapping[5] : '?'}</span>
+            `;
+        }
     }
 
     // Bind eventos do configurador
@@ -1480,6 +1499,21 @@ class GeniusGame {
                             statusElement.textContent = `✅ ${colorNames[this.currentMappingButton]} mapeado para botão ${i} do gamepad!`;
                             statusElement.style.color = '#00ff00';
                             statusElement.style.fontWeight = 'bold';
+                            
+                            // Mostrar guia de mapeamento
+                            setTimeout(() => {
+                                statusElement.innerHTML = `
+                                    <div style="text-align: left; margin-top: 10px;">
+                                        <strong>🎮 GUIA DE MAPEAMENTO:</strong><br>
+                                        <span style="color: #ff6b6b;">● Vermelho (0) → Gamepad botão ${this.gamepadMapping[0] || '?'}</span><br>
+                                        <span style="color: #ffffff;">● Branco (1) → Gamepad botão ${this.gamepadMapping[1] || '?'}</span><br>
+                                        <span style="color: #ffbf00;">● Âmbar (2) → Gamepad botão ${this.gamepadMapping[2] || '?'}</span><br>
+                                        <span style="color: #0066ff;">● Azul (3) → Gamepad botão ${this.gamepadMapping[3] || '?'}</span><br>
+                                        <span style="color: #ffff00;">● Amarelo (4) → Gamepad botão ${this.gamepadMapping[4] || '?'}</span><br>
+                                        <span style="color: #00ff00;">● Verde (5) → Gamepad botão ${this.gamepadMapping[5] || '?'}</span>
+                                    </div>
+                                `;
+                            }, 2000);
                         }
                         
                         const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
