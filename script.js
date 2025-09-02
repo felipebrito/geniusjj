@@ -1361,13 +1361,26 @@ class GeniusGame {
         const guideElement = document.getElementById('mappingGuide');
         if (guideElement) {
             guideElement.innerHTML = `
-                <strong>🎮 GUIA DE MAPEAMENTO ATUAL:</strong><br>
-                <span style="color: #ff6b6b;">● Vermelho (Button 1) → Gamepad botão ${this.gamepadMapping[0] !== undefined ? this.gamepadMapping[0] : '?'}</span><br>
-                <span style="color: #ffffff;">● Branco (Button 2) → Gamepad botão ${this.gamepadMapping[1] !== undefined ? this.gamepadMapping[1] : '?'}</span><br>
-                <span style="color: #ffbf00;">● Âmbar (Button 3) → Gamepad botão ${this.gamepadMapping[2] !== undefined ? this.gamepadMapping[2] : '?'}</span><br>
-                <span style="color: #0066ff;">● Azul (Button 4) → Gamepad botão ${this.gamepadMapping[3] !== undefined ? this.gamepadMapping[3] : '?'}</span><br>
-                <span style="color: #ffff00;">● Amarelo (Button 5) → Gamepad botão ${this.gamepadMapping[4] !== undefined ? this.gamepadMapping[4] : '?'}</span><br>
-                <span style="color: #00ff00;">● Verde (Button 6) → Gamepad botão ${this.gamepadMapping[5] !== undefined ? this.gamepadMapping[5] : '?'}</span>
+                <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 10px 0; border: 2px solid #0066ff;">
+                    <strong style="color: #0066ff; font-size: 16px;">🎮 GUIA DE MAPEAMENTO ATUAL</strong><br><br>
+                    <div style="background: #fff; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                        <strong style="color: #ff6b6b;">⚠️ IMPORTANTE:</strong> Quando o jogo piscar uma cor, pressione o botão do GAMEPAD correspondente!<br><br>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 14px;">
+                            <div style="color: #ff6b6b; font-weight: bold;">🔴 Vermelho (Button 1)</div>
+                            <div>→ Pressione <strong>Gamepad botão ${this.gamepadMapping[0] !== undefined ? this.gamepadMapping[0] : '?'}</strong></div>
+                            <div style="color: #ffffff; font-weight: bold; text-shadow: 1px 1px 1px #000;">⚪ Branco (Button 2)</div>
+                            <div>→ Pressione <strong>Gamepad botão ${this.gamepadMapping[1] !== undefined ? this.gamepadMapping[1] : '?'}</strong></div>
+                            <div style="color: #ffbf00; font-weight: bold;">🟡 Âmbar (Button 3)</div>
+                            <div>→ Pressione <strong>Gamepad botão ${this.gamepadMapping[2] !== undefined ? this.gamepadMapping[2] : '?'}</strong></div>
+                            <div style="color: #0066ff; font-weight: bold;">🔵 Azul (Button 4)</div>
+                            <div>→ Pressione <strong>Gamepad botão ${this.gamepadMapping[3] !== undefined ? this.gamepadMapping[3] : '?'}</strong></div>
+                            <div style="color: #ffff00; font-weight: bold; text-shadow: 1px 1px 1px #000;">🟨 Amarelo (Button 5)</div>
+                            <div>→ Pressione <strong>Gamepad botão ${this.gamepadMapping[4] !== undefined ? this.gamepadMapping[4] : '?'}</strong></div>
+                            <div style="color: #00ff00; font-weight: bold;">🟢 Verde (Button 6)</div>
+                            <div>→ Pressione <strong>Gamepad botão ${this.gamepadMapping[5] !== undefined ? this.gamepadMapping[5] : '?'}</strong></div>
+                        </div>
+                    </div>
+                </div>
             `;
         }
     }
@@ -1560,7 +1573,11 @@ class GeniusGame {
         // Encontrar qual botão do jogo está mapeado para este botão do gamepad
         for (let gameButton in this.gamepadMapping) {
             if (this.gamepadMapping[gameButton] === gamepadButtonIndex) {
-                console.log(`🎮 Mapeamento aplicado: gamepad botão ${gamepadButtonIndex} → jogo botão ${gameButton}`);
+                const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
+                const buttonNumbers = ['Button 1', 'Button 2', 'Button 3', 'Button 4', 'Button 5', 'Button 6'];
+                const colorName = colorNames[gameButton];
+                const buttonNumber = buttonNumbers[gameButton];
+                console.log(`🎮 Mapeamento aplicado: gamepad botão ${gamepadButtonIndex} → ${colorName} (${buttonNumber}) - jogo botão ${gameButton}`);
                 return parseInt(gameButton);
             }
         }
