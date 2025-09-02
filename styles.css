@@ -109,32 +109,32 @@ body {
 /* Posicionamento dos botões em órbita de 60 graus - FORA do círculo principal */
 .button-1 {
     transform: translate(-400px, -400px);
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52); /* Vermelho */
 }
 
 .button-2 {
     transform: translate(400px, -400px);
-    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    background: linear-gradient(135deg, #ffffff, #f0f0f0); /* Branco */
 }
 
 .button-3 {
     transform: translate(400px, 400px);
-    background: linear-gradient(135deg, #45b7d1, #96c93d);
+    background: linear-gradient(135deg, #ff8c00, #ff7f00); /* Laranja */
 }
 
 .button-4 {
     transform: translate(-400px, 400px);
-    background: linear-gradient(135deg, #f9ca24, #f0932b);
+    background: linear-gradient(135deg, #00ff00, #00cc00); /* Verde */
 }
 
 .button-5 {
     transform: translate(-500px, 0);
-    background: linear-gradient(135deg, #a55eea, #8854d0);
+    background: linear-gradient(135deg, #ffff00, #ffcc00); /* Amarelo */
 }
 
 .button-6 {
     transform: translate(500px, 0);
-    background: linear-gradient(135deg, #fd79a8, #e84393);
+    background: linear-gradient(135deg, #0066ff, #0044cc); /* Azul */
 }
 
 /* Efeitos de hover e ativo */
