@@ -1305,7 +1305,7 @@ class GeniusGame {
         this.closeGamepadConfigModal();
         
         // Mostrar confirmação
-        this.showNotification('Mapeamento do gamepad salvo com sucesso!', 'success');
+        console.log('✅ Mapeamento do gamepad salvo com sucesso!');
     }
 
     // Resetar mapeamento do gamepad
@@ -1399,13 +1399,15 @@ class GeniusGame {
         const statusElement = document.getElementById('gamepadConfigStatus');
         if (statusElement) {
             const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
-            statusElement.textContent = `Aguardando botão do gamepad para ${colorNames[buttonIndex]}...`;
+            statusElement.textContent = `🎮 PRESSIONE QUALQUER BOTÃO DO GAMEPAD para mapear ${colorNames[buttonIndex]}...`;
+            statusElement.style.color = '#ff6b6b';
+            statusElement.style.fontWeight = 'bold';
         }
         
         // Iniciar polling do gamepad
         this.startGamepadConfigPolling();
         
-        console.log(`🎮 Iniciando mapeamento para botão ${buttonIndex}`);
+        console.log(`🎮 Iniciando mapeamento para botão ${buttonIndex} - Aguardando input do gamepad...`);
     }
 
     // Parar mapeamento
@@ -1428,6 +1430,8 @@ class GeniusGame {
         const statusElement = document.getElementById('gamepadConfigStatus');
         if (statusElement) {
             statusElement.textContent = 'Clique em uma cor para começar o mapeamento...';
+            statusElement.style.color = '#ffffff';
+            statusElement.style.fontWeight = 'normal';
         }
         
         console.log('🎮 Mapeamento do gamepad parado');
@@ -1435,14 +1439,26 @@ class GeniusGame {
 
     // Iniciar polling do gamepad para configuração
     startGamepadConfigPolling() {
+        // Estado dos botões para detectar mudanças
+        let lastButtonStates = [];
+        
         this.gamepadConfigPollingInterval = setInterval(() => {
             const gamepads = navigator.getGamepads();
             const gamepad = gamepads[0];
             
             if (gamepad && this.isConfiguringGamepad && this.currentMappingButton !== null) {
-                // Verificar todos os botões
+                // Inicializar array de estados se necessário
+                if (lastButtonStates.length === 0) {
+                    lastButtonStates = new Array(gamepad.buttons.length).fill(false);
+                }
+                
+                // Verificar todos os botões para detectar mudanças
                 for (let i = 0; i < gamepad.buttons.length; i++) {
-                    if (gamepad.buttons[i] && gamepad.buttons[i].pressed) {
+                    const isPressed = gamepad.buttons[i] && gamepad.buttons[i].pressed;
+                    const wasPressed = lastButtonStates[i];
+                    
+                    // Se o botão foi pressionado (mudou de false para true)
+                    if (isPressed && !wasPressed) {
                         // Mapear botão do gamepad para botão do jogo
                         this.gamepadMapping[this.currentMappingButton] = i;
                         
@@ -1456,12 +1472,17 @@ class GeniusGame {
                         const statusElement = document.getElementById('gamepadConfigStatus');
                         if (statusElement) {
                             const colorNames = ['Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
-                            statusElement.textContent = `${colorNames[this.currentMappingButton]} mapeado para botão ${i} do gamepad!`;
+                            statusElement.textContent = `✅ ${colorNames[this.currentMappingButton]} mapeado para botão ${i} do gamepad!`;
+                            statusElement.style.color = '#00ff00';
+                            statusElement.style.fontWeight = 'bold';
                         }
                         
-                        console.log(`🎮 Botão ${this.currentMappingButton} mapeado para gamepad botão ${i}`);
+                        console.log(`🎮 Botão ${this.currentMappingButton} (${colorNames[this.currentMappingButton]}) mapeado para gamepad botão ${i}`);
                         break;
                     }
+                    
+                    // Atualizar estado anterior
+                    lastButtonStates[i] = isPressed;
                 }
             }
         }, 50); // 50ms para responsividade
