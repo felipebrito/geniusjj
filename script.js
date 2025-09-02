@@ -1291,12 +1291,12 @@ class GeniusGame {
             // Mapeamento padrão baseado na posição visual
             // 1=Vermelho(top-left), 2=Branco(top-right), 3=Âmbar(middle-left), 4=Azul(middle-right), 5=Amarelo(bottom-left), 6=Verde(bottom-right)
             this.gamepadMapping = {
-                0: 0, // Vermelho (1) → Gamepad botão 0
-                1: 1, // Branco (2) → Gamepad botão 1
-                2: 2, // Âmbar (3) → Gamepad botão 2
-                3: 3, // Azul (4) → Gamepad botão 3
-                4: 4, // Amarelo (5) → Gamepad botão 4
-                5: 5  // Verde (6) → Gamepad botão 5
+                0: 0, // Vermelho (Button 1) → Gamepad botão 0
+                1: 1, // Branco (Button 2) → Gamepad botão 1
+                2: 2, // Âmbar (Button 3) → Gamepad botão 2
+                3: 3, // Azul (Button 4) → Gamepad botão 3
+                4: 4, // Amarelo (Button 5) → Gamepad botão 4
+                5: 5  // Verde (Button 6) → Gamepad botão 5
             };
             console.log('🎮 Usando mapeamento padrão do gamepad (baseado na posição visual)');
         }
@@ -1319,12 +1319,12 @@ class GeniusGame {
     resetGamepadMapping() {
         // Mapeamento padrão baseado na posição visual
         this.gamepadMapping = {
-            0: 0, // Vermelho (1) → Gamepad botão 0
-            1: 1, // Branco (2) → Gamepad botão 1
-            2: 2, // Âmbar (3) → Gamepad botão 2
-            3: 3, // Azul (4) → Gamepad botão 3
-            4: 4, // Amarelo (5) → Gamepad botão 4
-            5: 5  // Verde (6) → Gamepad botão 5
+            0: 0, // Vermelho (Button 1) → Gamepad botão 0
+            1: 1, // Branco (Button 2) → Gamepad botão 1
+            2: 2, // Âmbar (Button 3) → Gamepad botão 2
+            3: 3, // Azul (Button 4) → Gamepad botão 3
+            4: 4, // Amarelo (Button 5) → Gamepad botão 4
+            5: 5  // Verde (Button 6) → Gamepad botão 5
         };
         this.updateMappingDisplay();
         console.log('🎮 Mapeamento do gamepad resetado para padrão (baseado na posição visual)');
@@ -1362,12 +1362,12 @@ class GeniusGame {
         if (guideElement) {
             guideElement.innerHTML = `
                 <strong>🎮 GUIA DE MAPEAMENTO ATUAL:</strong><br>
-                <span style="color: #ff6b6b;">● Vermelho (0) → Gamepad botão ${this.gamepadMapping[0] !== undefined ? this.gamepadMapping[0] : '?'}</span><br>
-                <span style="color: #ffffff;">● Branco (1) → Gamepad botão ${this.gamepadMapping[1] !== undefined ? this.gamepadMapping[1] : '?'}</span><br>
-                <span style="color: #ffbf00;">● Âmbar (2) → Gamepad botão ${this.gamepadMapping[2] !== undefined ? this.gamepadMapping[2] : '?'}</span><br>
-                <span style="color: #0066ff;">● Azul (3) → Gamepad botão ${this.gamepadMapping[3] !== undefined ? this.gamepadMapping[3] : '?'}</span><br>
-                <span style="color: #ffff00;">● Amarelo (4) → Gamepad botão ${this.gamepadMapping[4] !== undefined ? this.gamepadMapping[4] : '?'}</span><br>
-                <span style="color: #00ff00;">● Verde (5) → Gamepad botão ${this.gamepadMapping[5] !== undefined ? this.gamepadMapping[5] : '?'}</span>
+                <span style="color: #ff6b6b;">● Vermelho (Button 1) → Gamepad botão ${this.gamepadMapping[0] !== undefined ? this.gamepadMapping[0] : '?'}</span><br>
+                <span style="color: #ffffff;">● Branco (Button 2) → Gamepad botão ${this.gamepadMapping[1] !== undefined ? this.gamepadMapping[1] : '?'}</span><br>
+                <span style="color: #ffbf00;">● Âmbar (Button 3) → Gamepad botão ${this.gamepadMapping[2] !== undefined ? this.gamepadMapping[2] : '?'}</span><br>
+                <span style="color: #0066ff;">● Azul (Button 4) → Gamepad botão ${this.gamepadMapping[3] !== undefined ? this.gamepadMapping[3] : '?'}</span><br>
+                <span style="color: #ffff00;">● Amarelo (Button 5) → Gamepad botão ${this.gamepadMapping[4] !== undefined ? this.gamepadMapping[4] : '?'}</span><br>
+                <span style="color: #00ff00;">● Verde (Button 6) → Gamepad botão ${this.gamepadMapping[5] !== undefined ? this.gamepadMapping[5] : '?'}</span>
             `;
         }
     }
