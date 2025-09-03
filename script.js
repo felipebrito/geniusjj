@@ -551,10 +551,12 @@ class GeniusGame {
             this.record = this.score;
             localStorage.setItem('geniusRecord', this.score);
             this.updateDisplay();
-            this.statusElement.textContent = `NEW RECORD ACHIEVED - SCORE: ${this.score}`;
+            this.statusElement.textContent = `*** NEW HIGH SCORE *** SCORE: ${this.score} ***`;
+            this.statusElement.classList.add('new-record');
             console.log('Novo recorde salvo:', this.score);
         } else {
             this.statusElement.textContent = `GAME OVER - SCORE: ${this.score} | RECORD: ${this.record}`;
+            this.statusElement.classList.remove('new-record');
         }
         
         // Enviar Game Over para UDP
@@ -605,6 +607,7 @@ class GeniusGame {
         
         this.updateDisplay();
         this.statusElement.textContent = 'SYSTEM READY - PRESS ANY KEY TO INITIALIZE';
+        this.statusElement.classList.remove('new-record');
         
         // Mostrar o modal de status
         this.gameStatus.style.display = 'block';
