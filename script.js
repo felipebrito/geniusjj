@@ -450,6 +450,12 @@ class GeniusGame {
             const expectedButtonIndex = this.sequence[this.currentIndex] - 1;
             const isCorrect = this.playerSequence[this.currentIndex] === expectedButtonIndex;
             
+            // Debug detalhado
+            const colorNames = ['', 'Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
+            const expectedColor = colorNames[this.sequence[this.currentIndex]];
+            const pressedColor = colorNames[buttonIndex + 1];
+            console.log(`🎯 Verificação: Esperado ${expectedColor} (${this.sequence[this.currentIndex]}) → índice ${expectedButtonIndex}, Pressionado ${pressedColor} (${buttonIndex + 1}) → índice ${buttonIndex}, Correto: ${isCorrect}`);
+            
             // Enviar pressionamento de botão para UDP
             this.sendButtonPressToUDP(buttonIndex, isCorrect);
             
