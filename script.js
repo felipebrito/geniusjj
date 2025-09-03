@@ -387,7 +387,7 @@ class GeniusGame {
     
     async showSequence() {
         this.isShowingSequence = true;
-        this.statusElement.textContent = `Memorize a sequência de ${this.sequenceLength} botões!`;
+        this.statusElement.textContent = `MEMORIZE SEQUENCE - ${this.sequenceLength} BUTTONS`;
         
         // Pausa antes de mostrar a sequência
         await this.sleep(500);
@@ -428,7 +428,7 @@ class GeniusGame {
         }
         
         this.isShowingSequence = false;
-        this.statusElement.textContent = `Sua vez! Repita a sequência de ${this.sequenceLength} botões!`;
+        this.statusElement.textContent = `YOUR TURN - REPEAT ${this.sequenceLength} BUTTONS`;
         this.enablePlayerInput();
     }
     
@@ -517,7 +517,7 @@ class GeniusGame {
         }
         
         this.updateDisplay();
-        this.statusElement.textContent = `Nível ${this.level - 1} completo! Pontos: ${this.score}. Próximo: ${this.level} botões!`;
+        this.statusElement.textContent = `LEVEL ${this.level - 1} COMPLETE - SCORE: ${this.score} - NEXT: ${this.level} BUTTONS`;
         
         setTimeout(() => {
             this.generateSequence();
@@ -551,10 +551,10 @@ class GeniusGame {
             this.record = this.score;
             localStorage.setItem('geniusRecord', this.score);
             this.updateDisplay();
-            this.statusElement.textContent = `🏆 NOVO RECORDE! 🏆 ${this.score} pontos!`;
+            this.statusElement.textContent = `NEW RECORD ACHIEVED - SCORE: ${this.score}`;
             console.log('Novo recorde salvo:', this.score);
         } else {
-            this.statusElement.textContent = `Game Over! Pontuação: ${this.score} | Recorde: ${this.record}`;
+            this.statusElement.textContent = `GAME OVER - SCORE: ${this.score} | RECORD: ${this.record}`;
         }
         
         // Enviar Game Over para UDP
@@ -604,7 +604,7 @@ class GeniusGame {
         });
         
         this.updateDisplay();
-        this.statusElement.textContent = 'Pressione qualquer tecla para começar!';
+        this.statusElement.textContent = 'SYSTEM READY - PRESS ANY KEY TO INITIALIZE';
         
         // Mostrar o modal de status
         this.gameStatus.style.display = 'block';
@@ -653,6 +653,24 @@ class GeniusGame {
             else if (this.gameOver && this.readyForRestart) {
                 console.log('Reiniciando após game over...');
                 this.restartAfterGameOver();
+            }
+            // Se estiver jogando, processar teclas 1-6
+            else if (this.isPlaying && !this.isShowingSequence) {
+                const keyToButton = {
+                    '1': 0, // Tecla 1 = Botão 1 (Vermelho)
+                    '2': 1, // Tecla 2 = Botão 2 (Branco)
+                    '3': 2, // Tecla 3 = Botão 3 (Âmbar)
+                    '4': 3, // Tecla 4 = Botão 4 (Azul)
+                    '5': 4, // Tecla 5 = Botão 5 (Amarelo)
+                    '6': 5  // Tecla 6 = Botão 6 (Verde)
+                };
+                
+                if (keyToButton.hasOwnProperty(e.key)) {
+                    e.preventDefault();
+                    const buttonIndex = keyToButton[e.key];
+                    console.log(`Tecla ${e.key} pressionada - simulando clique no botão ${buttonIndex + 1}`);
+                    this.handleButtonClick(buttonIndex);
+                }
             }
         });
     }

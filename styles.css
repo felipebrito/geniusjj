@@ -90,14 +90,11 @@ body::before {
     font-weight: 900;
     color: #00ff00;
     text-shadow: 
-        0 0 20px #00ff00,
-        0 0 40px #00ff00,
-        0 0 60px #00ff00,
-        0 0 80px #00ff00;
+        0 0 5px #00ff00,
+        0 0 10px #00ff00;
     line-height: 1;
     font-family: 'Courier New', monospace;
     position: relative;
-    animation: ledGlow 1.5s ease-in-out infinite alternate;
 }
 
 @keyframes ledGlow {
@@ -312,24 +309,22 @@ body::before {
     font-size: 1.5rem;
     color: #00ff00;
     margin-bottom: 15px;
-    text-shadow: 0 0 10px #00ff00;
+    text-shadow: 0 0 5px #00ff00;
     font-weight: 600;
     font-family: 'Courier New', monospace;
     text-transform: uppercase;
     letter-spacing: 2px;
-    animation: textFlicker 3s ease-in-out infinite;
 }
 
 .level-display {
     font-size: 1.2rem;
     color: #00ff00;
     font-weight: 700;
-    text-shadow: 0 0 5px #00ff00;
+    text-shadow: 0 0 3px #00ff00;
     margin-bottom: 15px;
     font-family: 'Courier New', monospace;
     text-transform: uppercase;
     letter-spacing: 1px;
-    animation: textFlicker 3s ease-in-out infinite 0.5s;
 }
 
 @keyframes textFlicker {
@@ -346,45 +341,22 @@ body::before {
     0% {
         transform: scale(1);
         text-shadow: 
-            0 0 10px #00ff00,
-            0 0 20px #00ff00,
-            0 0 30px #00ff00,
-            0 0 40px #00ff00;
-    }
-    25% {
-        transform: scale(1.1);
-        text-shadow: 
-            0 0 20px #00ff00,
-            0 0 40px #00ff00,
-            0 0 60px #00ff00,
-            0 0 80px #00ff00,
-            0 0 100px #00ff00;
+            0 0 5px #00ff00,
+            0 0 10px #00ff00;
     }
     50% {
         transform: scale(1.05);
         text-shadow: 
-            0 0 30px #00ff00,
-            0 0 60px #00ff00,
-            0 0 90px #00ff00,
-            0 0 120px #00ff00,
-            0 0 150px #00ff00;
-        filter: brightness(1.5);
-    }
-    75% {
-        transform: scale(1.02);
-        text-shadow: 
-            0 0 25px #00ff00,
-            0 0 50px #00ff00,
-            0 0 75px #00ff00,
-            0 0 100px #00ff00;
+            0 0 10px #00ff00,
+            0 0 20px #00ff00,
+            0 0 30px #00ff00;
+        filter: brightness(1.2);
     }
     100% {
         transform: scale(1);
         text-shadow: 
-            0 0 20px #00ff00,
-            0 0 40px #00ff00,
-            0 0 60px #00ff00,
-            0 0 80px #00ff00;
+            0 0 5px #00ff00,
+            0 0 10px #00ff00;
         filter: brightness(1);
     }
 }
