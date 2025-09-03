@@ -76,6 +76,51 @@ body::after {
     100% { transform: translateY(0px) translateX(0px); }
 }
 
+/* Mensagem de início pulsante */
+.start-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 
+        0 0 10px #00ff00,
+        0 0 20px #00ff00,
+        0 0 30px #00ff00;
+    animation: messagePulse 2s ease-in-out infinite alternate;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.start-message.show {
+    opacity: 1;
+}
+
+@keyframes messagePulse {
+    0% {
+        text-shadow: 
+            0 0 5px #00ff00,
+            0 0 10px #00ff00,
+            0 0 15px #00ff00;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        text-shadow: 
+            0 0 15px #00ff00,
+            0 0 30px #00ff00,
+            0 0 45px #00ff00,
+            0 0 60px #00ff00;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+}
+
 /* Efeito especial para novo recorde */
 body.new-record::before {
     animation: recordExplosion 3s ease-out;
@@ -151,7 +196,7 @@ body.new-record::before {
 .score-circle {
     width: 100vh;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.9);
     border: 8px solid #00ff00;
     border-radius: 50%;
     display: flex;

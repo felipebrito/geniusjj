@@ -266,6 +266,7 @@ class GeniusGame {
         this.buttons = document.querySelectorAll('.game-button');
         this.confettiContainer = document.getElementById('confettiContainer');
         this.gameStatus = document.querySelector('.game-status');
+        this.startMessage = document.getElementById('startMessage');
     }
     
     bindEvents() {
@@ -340,6 +341,9 @@ class GeniusGame {
         console.log('Escondendo modal...');
         // Esconder o modal de status
         this.gameStatus.style.display = 'none';
+        
+        // Esconder mensagem pulsante
+        this.startMessage.classList.remove('show');
         
         // Limpar sequência anterior e começar do nível 1
         this.sequence = [];
@@ -613,6 +617,9 @@ class GeniusGame {
         this.statusElement.textContent = 'SYSTEM READY - PRESS ANY KEY TO INITIALIZE';
         this.statusElement.classList.remove('new-record');
         document.body.classList.remove('new-record');
+        
+        // Mostrar mensagem pulsante
+        this.startMessage.classList.add('show');
     }
     
     updateDisplay() {
