@@ -1319,6 +1319,7 @@ class GeniusGame {
                 6: 5  // Verde (Button 6) → Gamepad botão 5
             };
             console.log('🎮 Usando mapeamento padrão do gamepad (baseado na posição visual)');
+            console.log('💡 Dica: Use o configurador (gamepad-config.html) para personalizar o mapeamento');
         }
     }
 
