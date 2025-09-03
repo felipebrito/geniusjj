@@ -370,6 +370,17 @@ class GeniusGame {
         
         console.log(`Nível ${this.level}: Sequência atual:`, this.sequence);
         
+        // Debug detalhado da sequência
+        const colorNames = ['', 'Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
+        console.log('🎨 === SEQUÊNCIA GERADA ===');
+        this.sequence.forEach((colorNumber, index) => {
+            const colorName = colorNames[colorNumber];
+            const arrayPosition = index;
+            const buttonPosition = colorNumber;
+            console.log(`🎨 Posição ${arrayPosition}: ${colorName} (Button ${buttonPosition}) - Array[${index}] = ${colorNumber}`);
+        });
+        console.log('🎨 =========================');
+        
         // Enviar sequência para UDP ANTES de mostrar visualmente
         this.sendSequenceToUDP(this.sequence, this.level, this.score);
     }
@@ -386,6 +397,11 @@ class GeniusGame {
             const visualButtonNumber = this.sequence[i];
             const buttonIndex = visualButtonNumber - 1;
             const button = this.buttons[buttonIndex];
+            
+            // Debug detalhado do botão sendo ativado
+            const colorNames = ['', 'Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
+            const colorName = colorNames[visualButtonNumber];
+            console.log(`🎯 Ativando botão: ${colorName} (Button ${visualButtonNumber}) → Array[${buttonIndex}] - Posição na sequência: ${i}`);
             
             // Enviar dados UDP ANTES de ativar o botão (usar índice 0-5)
             this.sendButtonActivationToUDP(buttonIndex, i, this.sequence.length);
