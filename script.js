@@ -611,6 +611,14 @@ class GeniusGame {
     }
     
     updateDisplay() {
+        // Adicionar animação de LED quando o score aumenta
+        if (this.score > 0) {
+            this.scoreElement.classList.add('score-increase');
+            setTimeout(() => {
+                this.scoreElement.classList.remove('score-increase');
+            }, 800);
+        }
+        
         this.scoreElement.textContent = this.score;
         this.recordElement.textContent = this.record;
         this.levelElement.textContent = this.level;

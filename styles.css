@@ -6,13 +6,30 @@
 
 body {
     font-family: 'Orbitron', monospace;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-    color: #ffffff;
+    background: #000000;
+    color: #00ff00;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
+}
+
+/* Efeito de grid retro */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .game-container {
@@ -23,6 +40,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    z-index: 2;
 }
 
 /* Score Display - Círculo Central */
@@ -37,40 +55,119 @@ body {
 .score-circle {
     width: 100vh;
     height: 100vh;
-    background: radial-gradient(circle, #2d3748 0%, #1a202c 100%);
-    border: 4px solid #4a5568;
+    background: #000000;
+    border: 8px solid #00ff00;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     box-shadow: 
-        0 0 30px rgba(66, 153, 225, 0.3),
-        inset 0 0 30px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+        0 0 50px rgba(0, 255, 0, 0.8),
+        inset 0 0 50px rgba(0, 255, 0, 0.1),
+        8px 8px 0px rgba(0, 255, 0, 0.3);
+    position: relative;
+    animation: ledPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes ledPulse {
+    0% {
+        box-shadow: 
+            0 0 30px rgba(0, 255, 0, 0.6),
+            inset 0 0 30px rgba(0, 255, 0, 0.1),
+            8px 8px 0px rgba(0, 255, 0, 0.3);
+    }
+    100% {
+        box-shadow: 
+            0 0 80px rgba(0, 255, 0, 1),
+            inset 0 0 80px rgba(0, 255, 0, 0.2),
+            12px 12px 0px rgba(0, 255, 0, 0.5);
+    }
 }
 
 .score-number {
     font-size: 35rem;
     font-weight: 900;
-    color: #63b3ed;
-    text-shadow: 0 0 30px rgba(99, 179, 237, 0.8);
+    color: #00ff00;
+    text-shadow: 
+        0 0 20px #00ff00,
+        0 0 40px #00ff00,
+        0 0 60px #00ff00,
+        0 0 80px #00ff00;
     line-height: 1;
+    font-family: 'Courier New', monospace;
+    position: relative;
+    animation: ledGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes ledGlow {
+    0% {
+        text-shadow: 
+            0 0 10px #00ff00,
+            0 0 20px #00ff00,
+            0 0 30px #00ff00,
+            0 0 40px #00ff00;
+        filter: brightness(1);
+    }
+    100% {
+        text-shadow: 
+            0 0 20px #00ff00,
+            0 0 40px #00ff00,
+            0 0 60px #00ff00,
+            0 0 80px #00ff00,
+            0 0 100px #00ff00;
+        filter: brightness(1.2);
+    }
+}
+
+/* Efeito de segmentos LED */
+.score-number::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(0, 255, 0, 0.1) 50%, 
+        transparent 70%);
+    border-radius: 10px;
+    animation: ledScan 3s linear infinite;
+    z-index: -1;
+}
+
+@keyframes ledScan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .score-label {
     font-size: 3rem;
-    color: #a0aec0;
-    letter-spacing: 2px;
+    color: #00ff00;
+    letter-spacing: 4px;
     margin-top: 20px;
+    text-shadow: 0 0 10px #00ff00;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    animation: labelFlicker 4s ease-in-out infinite;
 }
 
 .record-label {
     font-size: 1.8rem;
-    color: #f6ad55;
-    letter-spacing: 1px;
+    color: #00ff00;
+    letter-spacing: 2px;
     margin-top: 15px;
     font-weight: 600;
+    text-shadow: 0 0 5px #00ff00;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    animation: labelFlicker 4s ease-in-out infinite 0.5s;
+}
+
+@keyframes labelFlicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
 /* Game Buttons - Orbita Circular */
@@ -87,70 +184,108 @@ body {
     position: absolute;
     width: 80px;
     height: 80px;
-    border: none;
-    border-radius: 50%;
+    border: 4px solid #00ff00;
+    border-radius: 0;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: transparent;
+    transition: all 0.2s ease;
+    background: #000000;
     overflow: hidden;
     z-index: 15;
+    box-shadow: 
+        4px 4px 0px rgba(0, 255, 0, 0.5),
+        0 0 20px rgba(0, 255, 0, 0.3);
+    transform: rotate(45deg);
+}
+
+.game-button:hover {
+    transform: rotate(45deg) translateY(-2px);
+    box-shadow: 
+        6px 6px 0px rgba(0, 255, 0, 0.7),
+        0 0 30px rgba(0, 255, 0, 0.5);
 }
 
 .button-inner {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+    border-radius: 0;
+    transition: all 0.2s ease;
     box-shadow: 
         0 0 20px rgba(0, 0, 0, 0.5),
-        inset 0 0 20px rgba(255, 255, 255, 0.1);
+        inset 0 0 20px rgba(0, 255, 0, 0.1);
+    transform: rotate(-45deg);
 }
 
 /* Posicionamento dos botões em órbita de 60 graus - FORA do círculo principal */
 .button-1 {
-    transform: translate(-400px, -400px);
+    transform: translate(-400px, -400px) rotate(45deg);
     background: linear-gradient(135deg, #ff6b6b, #ee5a52); /* Vermelho - linha de cima */
+    border: 4px solid #ff6b6b;
+    box-shadow: 
+        4px 4px 0px rgba(255, 107, 107, 0.5),
+        0 0 20px rgba(255, 107, 107, 0.3);
 }
 
 .button-2 {
-    transform: translate(400px, -400px);
+    transform: translate(400px, -400px) rotate(45deg);
     background: linear-gradient(135deg, #ffffff, #f0f0f0); /* Branco - linha de cima */
+    border: 4px solid #ffffff;
+    box-shadow: 
+        4px 4px 0px rgba(255, 255, 255, 0.5),
+        0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .button-3 {
-    transform: translate(-500px, 0);
+    transform: translate(-500px, 0) rotate(45deg);
     background: linear-gradient(135deg, #ffbf00, #ff8c00) !important; /* Âmbar - botão 3 (Visual 3) */
+    border: 4px solid #ffbf00;
+    box-shadow: 
+        4px 4px 0px rgba(255, 191, 0, 0.5),
+        0 0 20px rgba(255, 191, 0, 0.3);
 }
 
 .button-4 {
-    transform: translate(500px, 0);
+    transform: translate(500px, 0) rotate(45deg);
     background: linear-gradient(135deg, #0066ff, #0044cc) !important; /* Azul - botão 4 (Visual 4) */
+    border: 4px solid #0066ff;
+    box-shadow: 
+        4px 4px 0px rgba(0, 102, 255, 0.5),
+        0 0 20px rgba(0, 102, 255, 0.3);
 }
 
 .button-5 {
-    transform: translate(-400px, 400px);
+    transform: translate(-400px, 400px) rotate(45deg);
     background: linear-gradient(135deg, #ffff00, #ffcc00) !important; /* Amarelo - botão 5 (Visual 5) */
+    border: 4px solid #ffff00;
+    box-shadow: 
+        4px 4px 0px rgba(255, 255, 0, 0.5),
+        0 0 20px rgba(255, 255, 0, 0.3);
 }
 
 .button-6 {
-    transform: translate(400px, 400px);
+    transform: translate(400px, 400px) rotate(45deg);
     background: linear-gradient(135deg, #00ff00, #00cc00) !important; /* Verde - botão 6 (Visual 6) */
+    border: 4px solid #00ff00;
+    box-shadow: 
+        4px 4px 0px rgba(0, 255, 0, 0.5),
+        0 0 20px rgba(0, 255, 0, 0.3);
 }
 
 /* Efeitos de hover e ativo */
-.game-button:hover {
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-}
-
-.game-button:active {
-    /* Sem transformação para manter posição fixa */
-}
-
 .game-button.active {
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
-    filter: brightness(1.3);
+    transform: scale(1.1) rotate(45deg);
+    box-shadow: 
+        8px 8px 0px rgba(0, 255, 0, 0.8),
+        0 0 50px rgba(0, 255, 0, 0.8);
     animation: buttonPulse 0.3s ease-in-out;
 }
+
+@keyframes buttonPulse {
+    0% { transform: scale(1) rotate(45deg); }
+    50% { transform: scale(1.2) rotate(45deg); }
+    100% { transform: scale(1.1) rotate(45deg); }
+}
+
+
 
 
 
@@ -160,43 +295,112 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(26, 32, 44, 0.95);
-    backdrop-filter: blur(20px);
-    border: 2px solid #4a5568;
-    border-radius: 20px;
+    background: #000000;
+    border: 4px solid #00ff00;
+    border-radius: 0;
     padding: 30px 40px;
     text-align: center;
     z-index: 100;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        8px 8px 0px rgba(0, 255, 0, 0.5),
+        0 0 30px rgba(0, 255, 0, 0.3);
     min-width: 400px;
     max-width: 600px;
 }
 
 .status-text {
     font-size: 1.5rem;
-    color: #ffffff;
+    color: #00ff00;
     margin-bottom: 15px;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 0 10px #00ff00;
     font-weight: 600;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: textFlicker 3s ease-in-out infinite;
 }
 
 .level-display {
     font-size: 1.2rem;
-    color: #63b3ed;
+    color: #00ff00;
     font-weight: 700;
-    text-shadow: 0 0 10px rgba(99, 179, 237, 0.3);
+    text-shadow: 0 0 5px #00ff00;
     margin-bottom: 15px;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: textFlicker 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes textFlicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* Animação especial para quando o score aumenta */
+.score-number.score-increase {
+    animation: scoreIncrease 0.8s ease-out;
+}
+
+@keyframes scoreIncrease {
+    0% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 10px #00ff00,
+            0 0 20px #00ff00,
+            0 0 30px #00ff00,
+            0 0 40px #00ff00;
+    }
+    25% {
+        transform: scale(1.1);
+        text-shadow: 
+            0 0 20px #00ff00,
+            0 0 40px #00ff00,
+            0 0 60px #00ff00,
+            0 0 80px #00ff00,
+            0 0 100px #00ff00;
+    }
+    50% {
+        transform: scale(1.05);
+        text-shadow: 
+            0 0 30px #00ff00,
+            0 0 60px #00ff00,
+            0 0 90px #00ff00,
+            0 0 120px #00ff00,
+            0 0 150px #00ff00;
+        filter: brightness(1.5);
+    }
+    75% {
+        transform: scale(1.02);
+        text-shadow: 
+            0 0 25px #00ff00,
+            0 0 50px #00ff00,
+            0 0 75px #00ff00,
+            0 0 100px #00ff00;
+    }
+    100% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 20px #00ff00,
+            0 0 40px #00ff00,
+            0 0 60px #00ff00,
+            0 0 80px #00ff00;
+        filter: brightness(1);
+    }
 }
 
 .gamepad-info {
     font-size: 1rem;
-    color: #f6ad55;
+    color: #00ff00;
     font-weight: 600;
     text-align: center;
     padding: 10px;
-    background: rgba(246, 173, 85, 0.1);
-    border-radius: 10px;
-    border: 1px solid rgba(246, 173, 85, 0.3);
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 0;
+    border: 2px solid #00ff00;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* Animações */
@@ -475,10 +679,12 @@ body {
     background: #4a5568;
     outline: none;
     -webkit-appearance: none;
+    appearance: none;
 }
 
 .config-item input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
+    appearance: none;
     appearance: none;
     width: 20px;
     height: 20px;
