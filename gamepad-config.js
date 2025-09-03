@@ -139,8 +139,47 @@ class GamepadConfigurator {
                 document.getElementById('testBtn').disabled = false;
                 document.getElementById('saveBtn').disabled = false;
             }
+        } else if (this.isTestMode) {
+            // Modo de teste - mostrar feedback visual
+            this.handleTestModeButtonPress(gamepadButtonIndex);
         } else {
             this.debugLog(`🎮 Botão ${gamepadButtonIndex} pressionado (não em modo de mapeamento)`, 'info');
+        }
+    }
+    
+    handleTestModeButtonPress(gamepadButtonIndex) {
+        // Encontrar qual botão do jogo corresponde a este botão do gamepad
+        let gameButton = null;
+        for (let color in this.mapping) {
+            if (this.mapping[color] === gamepadButtonIndex) {
+                gameButton = parseInt(color);
+                break;
+            }
+        }
+        
+        if (gameButton) {
+            const colorName = this.getColorName(gameButton);
+            this.showStatus(`🧪 TESTE: ${colorName} ativado! (Gamepad botão ${gamepadButtonIndex})`, 'success');
+            this.debugLog(`🧪 TESTE: ${colorName} (${gameButton}) ativado via gamepad botão ${gamepadButtonIndex}`, 'success');
+            
+            // Feedback visual - piscar o botão
+            this.flashButton(gameButton);
+        } else {
+            this.showStatus(`🧪 TESTE: Botão ${gamepadButtonIndex} pressionado (não mapeado)`, 'warning');
+            this.debugLog(`🧪 TESTE: Botão ${gamepadButtonIndex} pressionado mas não está mapeado`, 'warning');
+        }
+    }
+    
+    flashButton(colorNumber) {
+        const buttonElement = document.querySelector(`[data-color="${colorNumber}"]`);
+        if (buttonElement) {
+            // Adicionar classe de flash
+            buttonElement.classList.add('flash');
+            
+            // Remover classe após animação
+            setTimeout(() => {
+                buttonElement.classList.remove('flash');
+            }, 300);
         }
     }
     
@@ -226,7 +265,7 @@ class GamepadConfigurator {
             return;
         }
         
-        this.showStatus('🧪 Modo de teste ativado! Pressione os botões do gamepad para testar.', 'info');
+        this.showStatus('🧪 Modo de teste ativado! Pressione os botões do gamepad para testar. Os botões do jogo vão piscar quando você pressionar os botões correspondentes.', 'info');
         this.debugLog('🧪 Iniciando teste do mapeamento', 'info');
         
         // Temporariamente ativar modo de teste
@@ -241,12 +280,12 @@ class GamepadConfigurator {
         }
         this.debugLog(mappingText, 'info');
         
-        // Desativar modo de teste após 10 segundos
+        // Desativar modo de teste após 15 segundos
         setTimeout(() => {
             this.isTestMode = false;
             this.showStatus('✅ Teste finalizado. Salve a configuração se estiver correta.', 'success');
             this.debugLog('✅ Teste do mapeamento finalizado', 'success');
-        }, 10000);
+        }, 15000);
     }
     
     saveMapping() {
