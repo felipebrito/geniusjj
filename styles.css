@@ -79,12 +79,12 @@ body::after {
 /* Mensagem de início pulsante */
 .start-message {
     position: fixed;
-    top: 50%;
+    top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #00ff00;
+    color: #ffffff;
     font-family: 'Courier New', monospace;
-    font-size: 1.5rem;
+    font-size: 2.8rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 3px;
@@ -93,14 +93,19 @@ body::after {
         0 0 20px #00ff00,
         0 0 30px #00ff00;
     animation: messagePulse 2s ease-in-out infinite alternate;
-    z-index: 1000;
+    z-index: 10000;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.5s ease;
+    display: block;
+    width: 60%;
+    visibility: hidden;
 }
 
 .start-message.show {
-    opacity: 1;
+    opacity: 1 !important;
+    display: block !important;
+    visibility: visible !important;
 }
 
 @keyframes messagePulse {
@@ -196,7 +201,7 @@ body.new-record::before {
 .score-circle {
     width: 100vh;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.9);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
     border: 8px solid #00ff00;
     border-radius: 50%;
     display: flex;
@@ -443,7 +448,7 @@ body.new-record::before {
     box-shadow: 
         8px 8px 0px rgba(0, 255, 0, 0.5),
         0 0 30px rgba(0, 255, 0, 0.3);
-    min-width: 400px;
+    min-width: 540px;
     max-width: 600px;
 }
 
@@ -666,11 +671,249 @@ body.new-record::before {
 @keyframes congratsPulse {
     0%, 100% {
         transform: translate(-50%, -50%) scale(1);
-        box-shadow: 0 0 30px rgba(246, 173, 85, 0.8);
+        box-shadow: 
+            0 0 30px rgba(0, 255, 0, 0.6),
+            8px 8px 0px rgba(0, 255, 0, 0.3);
     }
     50% {
         transform: translate(-50%, -50%) scale(1.05);
-        box-shadow: 0 0 50px rgba(246, 173, 85, 1);
+        box-shadow: 
+            0 0 50px rgba(0, 255, 0, 0.8),
+            8px 8px 0px rgba(0, 255, 0, 0.5);
+    }
+}
+
+/* Animação espetacular de Game Over - Estilo Caça-Níquel */
+.game-over-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.95));
+    z-index: 20000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: gameOverEntrance 0.8s ease-out;
+}
+
+@keyframes gameOverEntrance {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.game-over-title {
+    font-family: 'Courier New', monospace;
+    font-size: 4rem;
+    font-weight: 900;
+    color: #ff0000;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    text-shadow: 
+        0 0 20px #ff0000,
+        0 0 40px #ff0000,
+        0 0 60px #ff0000,
+        0 0 80px #ff0000;
+    animation: gameOverTitlePulse 1.5s ease-in-out infinite alternate;
+    margin-bottom: 30px;
+}
+
+@keyframes gameOverTitlePulse {
+    0% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 20px #ff0000,
+            0 0 40px #ff0000,
+            0 0 60px #ff0000,
+            0 0 80px #ff0000;
+    }
+    100% {
+        transform: scale(1.1);
+        text-shadow: 
+            0 0 30px #ff0000,
+            0 0 60px #ff0000,
+            0 0 90px #ff0000,
+            0 0 120px #ff0000,
+            0 0 150px #ff0000;
+    }
+}
+
+.game-over-score {
+    font-family: 'Courier New', monospace;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #00ff00;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 
+        0 0 15px #00ff00,
+        0 0 30px #00ff00,
+        0 0 45px #00ff00;
+    animation: scoreGlow 2s ease-in-out infinite alternate;
+    margin-bottom: 20px;
+}
+
+@keyframes scoreGlow {
+    0% {
+        text-shadow: 
+            0 0 15px #00ff00,
+            0 0 30px #00ff00,
+            0 0 45px #00ff00;
+    }
+    100% {
+        text-shadow: 
+            0 0 25px #00ff00,
+            0 0 50px #00ff00,
+            0 0 75px #00ff00,
+            0 0 100px #00ff00;
+    }
+}
+
+.game-over-message {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    color: #ffff00;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 
+        0 0 10px #ffff00,
+        0 0 20px #ffff00;
+    animation: messageFlicker 1s ease-in-out infinite alternate;
+    margin-bottom: 40px;
+}
+
+@keyframes messageFlicker {
+    0% {
+        opacity: 0.7;
+        text-shadow: 
+            0 0 10px #ffff00,
+            0 0 20px #ffff00;
+    }
+    100% {
+        opacity: 1;
+        text-shadow: 
+            0 0 15px #ffff00,
+            0 0 30px #ffff00,
+            0 0 45px #ffff00;
+    }
+}
+
+/* Efeitos de partículas para Game Over */
+.game-over-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #00ff00;
+    border-radius: 50%;
+    animation: particleFloat 3s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(0px) translateX(0px) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-100px) translateX(50px) scale(1.5);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-200px) translateX(-50px) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Efeito de explosão de cores */
+.game-over-explosion {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(255, 0, 0, 0.8) 0%,
+        rgba(255, 255, 0, 0.6) 25%,
+        rgba(0, 255, 0, 0.4) 50%,
+        rgba(0, 255, 255, 0.2) 75%,
+        transparent 100%);
+    animation: explosionPulse 2s ease-in-out infinite;
+    z-index: 0;
+}
+
+@keyframes explosionPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Efeito de rotação das bordas */
+.game-over-border {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 4px solid transparent;
+    border-image: linear-gradient(45deg, #ff0000, #ffff00, #00ff00, #00ffff, #ff00ff, #ff0000) 1;
+    animation: borderRotate 3s linear infinite;
+    z-index: 2;
+}
+
+@keyframes borderRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Efeito de texto piscante */
+.game-over-restart {
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: restartBlink 1s ease-in-out infinite;
+    margin-top: 20px;
+}
+
+@keyframes restartBlink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0.3;
     }
 }
 
@@ -995,8 +1238,8 @@ body.new-record::before {
 
     
     .game-status {
-        min-width: 300px;
-        max-width: 400px;
+        min-width: 400px;
+        max-width: 600px;
         padding: 20px 25px;
     }
     
@@ -1240,5 +1483,251 @@ body.new-record::before {
     .mapped-button {
         font-size: 0.7rem;
         padding: 3px 6px;
+    }
+}
+
+/* ===== ANIMAÇÕES DE CAÇA-NÍQUEL PARA NOVO RECORDE ===== */
+
+@keyframes jackpotEntrance {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-10deg);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes jackpotExit {
+    0% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8) rotate(10deg);
+    }
+}
+
+@keyframes jackpotTextPulse {
+    0% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 20px #FFD700,
+            0 0 40px #FFD700,
+            0 0 60px #FFD700,
+            0 0 80px #FFD700;
+    }
+    100% {
+        transform: scale(1.1);
+        text-shadow: 
+            0 0 30px #FFD700,
+            0 0 60px #FFD700,
+            0 0 90px #FFD700,
+            0 0 120px #FFD700;
+    }
+}
+
+@keyframes newRecordGlow {
+    0% {
+        color: #00FF00;
+        text-shadow: 
+            0 0 15px #00FF00,
+            0 0 30px #00FF00,
+            0 0 45px #00FF00;
+    }
+    100% {
+        color: #00FF00;
+        text-shadow: 
+            0 0 25px #00FF00,
+            0 0 50px #00FF00,
+            0 0 75px #00FF00,
+            0 0 100px #00FF00;
+    }
+}
+
+@keyframes scoreSlotMachine {
+    0% {
+        transform: scale(0.5) rotateY(0deg);
+        opacity: 0;
+    }
+    25% {
+        transform: scale(1.2) rotateY(90deg);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.1) rotateY(180deg);
+        opacity: 1;
+    }
+    75% {
+        transform: scale(1.3) rotateY(270deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotateY(360deg);
+        opacity: 1;
+    }
+}
+
+@keyframes congratsFloat {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes slotLightBlink {
+    0% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes coinFall {
+    0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(50vh) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes jackpotFirework {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(2) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes coinFallCircle {
+    0% {
+        transform: translateY(-20px) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(50px) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* ===== ANIMAÇÕES DE GAME OVER DIVERTIDO ===== */
+
+@keyframes gameOverEntrance {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-180deg);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.2) rotate(90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes gameOverExit {
+    0% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.5) rotate(180deg);
+    }
+}
+
+@keyframes gameOverPulse {
+    0% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 10px #FF0000,
+            0 0 20px #FF0000,
+            0 0 30px #FF0000;
+    }
+    100% {
+        transform: scale(1.1);
+        text-shadow: 
+            0 0 15px #FF0000,
+            0 0 30px #FF0000,
+            0 0 45px #FF0000;
+    }
+}
+
+@keyframes messageFloat {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes emojiBounce {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    25% {
+        transform: scale(1.2) rotate(5deg);
+    }
+    50% {
+        transform: scale(1.1) rotate(-5deg);
+    }
+    75% {
+        transform: scale(1.2) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes gameOverParticle {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
     }
 }

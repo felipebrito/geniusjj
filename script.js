@@ -4,11 +4,18 @@ class GeniusGame {
         this.playerSequence = [];
         this.score = 0;
         this.record = parseInt(localStorage.getItem('geniusRecord')) || 0;
+        
+        // DEBUG: Forçar recorde baixo para teste
+        if (this.record === 0) {
+            this.record = 0; // Manter recorde em 0 para facilitar teste
+            console.log('🎰 DEBUG: Recorde mantido em 0 para facilitar teste');
+        }
         this.level = 1;
         this.isPlaying = false;
         this.isShowingSequence = false;
         this.currentIndex = 0;
         this.speed = 800;
+        this.keysDisabled = false;
         this.sequenceLength = 0;
         this.gameOver = false;
         this.readyForRestart = false;
@@ -261,12 +268,17 @@ class GeniusGame {
     initializeElements() {
         this.scoreElement = document.getElementById('score');
         this.recordElement = document.getElementById('record');
-        this.levelElement = document.getElementById('level');
         this.statusElement = document.getElementById('statusText');
         this.buttons = document.querySelectorAll('.game-button');
         this.confettiContainer = document.getElementById('confettiContainer');
         this.gameStatus = document.querySelector('.game-status');
         this.startMessage = document.getElementById('startMessage');
+        
+        console.log('Elementos inicializados:');
+        console.log('- scoreElement:', this.scoreElement);
+        console.log('- recordElement:', this.recordElement);
+        console.log('- statusElement:', this.statusElement);
+        console.log('- startMessage:', this.startMessage);
     }
     
     bindEvents() {
@@ -513,6 +525,7 @@ class GeniusGame {
         this.score += 1;
         this.level++;
         this.speed = Math.max(400, this.speed - 30);
+        console.log('Level completo! Score:', this.score, 'Level:', this.level);
         
         // Limpar timer de inatividade
         if (this.inactivityTimer) {
@@ -521,7 +534,9 @@ class GeniusGame {
         }
         
         this.updateDisplay();
-        this.statusElement.textContent = `LEVEL ${this.level - 1} COMPLETE - SCORE: ${this.score} - NEXT: ${this.level} BUTTONS`;
+        if (this.statusElement) {
+            this.statusElement.textContent = `LEVEL ${this.level - 1} COMPLETE - SCORE: ${this.score} - NEXT: ${this.level} BUTTONS`;
+        }
         
         setTimeout(() => {
             this.generateSequence();
@@ -573,19 +588,581 @@ class GeniusGame {
         // Enviar Game Over para UDP
         this.sendGameOverToUDP(this.score, isNewRecord);
         
-        // Efeito de game over
-        this.buttons.forEach(button => {
-            button.style.animation = 'pulse 0.5s ease-in-out';
+        // Mostrar animação espetacular de Game Over
+        this.showSpectacularGameOver(this.score, isNewRecord);
+    }
+    
+    showSpectacularGameOver(score, isNewRecord) {
+        console.log('🎰 showSpectacularGameOver chamado!', { score, isNewRecord, record: this.record });
+        
+        // Desativar todas as teclas durante a animação
+        this.keysDisabled = true;
+        
+        if (isNewRecord) {
+            console.log('🎰 NOVO RECORDE! Mostrando animação JACKPOT!');
+            // ANIMAÇÃO ESPECIAL PARA NOVO RECORDE - CAÇA-NÍQUEL!
+            this.showJackpotAnimation(score);
+        } else {
+            console.log('🎰 Game Over normal - sem novo recorde');
+            // Animação normal de Game Over
+            this.showNormalGameOver(score);
+        }
+    }
+    
+    showJackpotAnimation(score) {
+        console.log('🎰 showJackpotAnimation iniciado! Score:', score);
+        
+        // Encontrar o círculo de score
+        const scoreCircle = document.querySelector('.score-circle');
+        if (!scoreCircle) {
+            console.log('❌ Círculo de score não encontrado!');
+            return;
+        }
+        
+        // Criar container JACKPOT apenas no círculo
+        const jackpotContainer = document.createElement('div');
+        jackpotContainer.className = 'jackpot-container';
+        
+        // Posicionar sobre o círculo de score
+        const rect = scoreCircle.getBoundingClientRect();
+        jackpotContainer.style.cssText = `
+            position: fixed;
+            top: ${rect.top}px;
+            left: ${rect.left}px;
+            width: ${rect.width}px;
+            height: ${rect.height}px;
+            background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,215,0,0.4) 50%, transparent 100%);
+            border-radius: 50%;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: jackpotEntrance 0.8s ease-out;
+            overflow: hidden;
+        `;
+        
+        // Efeito de luzes piscando (como caça-níquel)
+        this.createSlotMachineLights(jackpotContainer);
+        
+        // Moedas caindo
+        this.createFallingCoins(jackpotContainer);
+        
+        // Título JACKPOT compacto para o círculo
+        const jackpotTitle = document.createElement('div');
+        jackpotTitle.className = 'jackpot-title';
+        jackpotTitle.style.cssText = `
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 
+                0 0 10px #FFD700,
+                0 0 20px #FFD700,
+                0 0 30px #FFD700;
+            margin-bottom: 5px;
+            animation: jackpotTextPulse 0.5s ease-in-out infinite alternate;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        `;
+        jackpotTitle.textContent = 'JACKPOT!';
+        jackpotContainer.appendChild(jackpotTitle);
+        
+        // NOVO RECORDE compacto
+        const newRecordText = document.createElement('div');
+        newRecordText.className = 'new-record-text';
+        newRecordText.style.cssText = `
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #00FF00;
+            text-shadow: 
+                0 0 8px #00FF00,
+                0 0 16px #00FF00,
+                0 0 24px #00FF00;
+            margin-bottom: 5px;
+            animation: newRecordGlow 1s ease-in-out infinite alternate;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        `;
+        newRecordText.textContent = 'NOVO RECORDE!';
+        jackpotContainer.appendChild(newRecordText);
+        
+        // Score compacto
+        const scoreDisplay = document.createElement('div');
+        scoreDisplay.className = 'jackpot-score';
+        scoreDisplay.style.cssText = `
+            font-size: 1rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 
+                0 0 10px #FFD700,
+                0 0 20px #FFD700;
+            margin-bottom: 5px;
+            animation: scoreSlotMachine 2s ease-in-out;
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+        `;
+        scoreDisplay.textContent = `${score}`;
+        jackpotContainer.appendChild(scoreDisplay);
+        
+        // Emojis de celebração
+        const celebrationEmojis = document.createElement('div');
+        celebrationEmojis.className = 'celebration-emojis';
+        celebrationEmojis.style.cssText = `
+            font-size: 1.5rem;
+            animation: congratsFloat 2s ease-in-out infinite;
+            text-align: center;
+        `;
+        celebrationEmojis.textContent = '🎉💰🎰✨';
+        jackpotContainer.appendChild(celebrationEmojis);
+        
+        // Efeito de fogos de artifício
+        this.createFireworks(jackpotContainer);
+        
+        // Adicionar ao body
+        document.body.appendChild(jackpotContainer);
+        console.log('🎰 Container JACKPOT adicionado ao DOM!', jackpotContainer);
+        
+        // Efeitos sonoros de caça-níquel
+        this.playJackpotSounds();
+        
+        // Remover animação após 8 segundos
+        setTimeout(() => {
+            jackpotContainer.style.animation = 'jackpotExit 1s ease-in';
+            jackpotContainer.style.opacity = '0';
+            
+            setTimeout(() => {
+                document.body.removeChild(jackpotContainer);
+                this.keysDisabled = false;
+                this.resetGame();
+            }, 1000);
+        }, 8000);
+    }
+    
+    showNormalGameOver(score) {
+        console.log('🎮 Game Over normal - Score:', score);
+        
+        // Encontrar o círculo de score
+        const scoreCircle = document.querySelector('.score-circle');
+        if (!scoreCircle) {
+            console.log('❌ Círculo de score não encontrado!');
+            return;
+        }
+        
+        // Criar container Game Over divertido no círculo
+        const gameOverContainer = document.createElement('div');
+        gameOverContainer.className = 'game-over-container';
+        
+        // Posicionar sobre o círculo de score
+        const rect = scoreCircle.getBoundingClientRect();
+        gameOverContainer.style.cssText = `
+            position: fixed;
+            top: ${rect.top}px;
+            left: ${rect.left}px;
+            width: ${rect.width}px;
+            height: ${rect.height}px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 100, 100, 0.3) 50%, transparent 100%);
+            border-radius: 50%;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: gameOverEntrance 0.8s ease-out;
+            overflow: hidden;
+        `;
+        
+        // Efeito de partículas vermelhas
+        this.createGameOverParticles(gameOverContainer);
+        
+        // Título Game Over
+        const title = document.createElement('div');
+        title.style.cssText = `
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #FF0000;
+            text-shadow: 
+                0 0 10px #FF0000,
+                0 0 20px #FF0000,
+                0 0 30px #FF0000;
+            margin-bottom: 10px;
+            animation: gameOverPulse 0.5s ease-in-out infinite alternate;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        `;
+        title.textContent = 'GAME OVER';
+        gameOverContainer.appendChild(title);
+        
+        // Score
+        const scoreElement = document.createElement('div');
+        scoreElement.style.cssText = `
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 0 0 10px #FFFFFF;
+            margin-bottom: 10px;
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+        `;
+        scoreElement.textContent = `SCORE: ${score}`;
+        gameOverContainer.appendChild(scoreElement);
+        
+        // Mensagem motivacional
+        const message = document.createElement('div');
+        message.style.cssText = `
+            font-size: 0.8rem;
+            color: #FFFF00;
+            text-align: center;
+            margin-bottom: 10px;
+            animation: messageFloat 2s ease-in-out infinite;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        `;
+        message.textContent = 'TENTE NOVAMENTE!';
+        gameOverContainer.appendChild(message);
+        
+        // Emojis de motivação
+        const motivationEmojis = document.createElement('div');
+        motivationEmojis.style.cssText = `
+            font-size: 1.2rem;
+            animation: emojiBounce 1s ease-in-out infinite;
+            text-align: center;
+        `;
+        motivationEmojis.textContent = '💪🎯🔥';
+        gameOverContainer.appendChild(motivationEmojis);
+        
+        // Adicionar ao body
+        document.body.appendChild(gameOverContainer);
+        console.log('🎮 Container Game Over adicionado ao DOM!');
+        
+        // Efeito sonoro divertido
+        this.playFunGameOverSound();
+        
+        // Remover animação após 4 segundos
+        setTimeout(() => {
+            gameOverContainer.style.animation = 'gameOverExit 0.5s ease-in';
+            gameOverContainer.style.opacity = '0';
+            
+            setTimeout(() => {
+                if (gameOverContainer.parentNode) {
+                    document.body.removeChild(gameOverContainer);
+                }
+                this.keysDisabled = false;
+                this.resetGame();
+            }, 500);
+        }, 4000);
+    }
+    
+    playGameOverSound() {
+        // Criar som de game over usando Web Audio API
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(200, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(50, this.audioContext.currentTime + 1);
+        
+        gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 1);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + 1);
+    }
+    
+    playJackpotSounds() {
+        if (!this.audioContext) return;
+        
+        // Som de JACKPOT - sequência de tons ascendentes
+        const jackpotSequence = [440, 554, 659, 880, 1109, 1319]; // A, C#, E, A, C#, E
+        
+        jackpotSequence.forEach((freq, index) => {
+            setTimeout(() => {
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+                
+                oscillator.frequency.value = freq;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
+                
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + 0.3);
+            }, index * 200);
         });
         
+        // Som de moedas caindo após 1 segundo
         setTimeout(() => {
-            this.buttons.forEach(button => {
-                button.style.animation = '';
-            });
+            this.playCoinSounds();
+        }, 1000);
+    }
+    
+    playCoinSounds() {
+        if (!this.audioContext) return;
+        
+        // Som de moedas caindo - mais alegre e vivo
+        for (let i = 0; i < 12; i++) {
+            setTimeout(() => {
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+                
+                // Frequências mais alegres (notas musicais)
+                const coinFrequencies = [523, 659, 784, 1047, 1319, 1568]; // C, E, G, C, E, G
+                oscillator.frequency.value = coinFrequencies[i % coinFrequencies.length] + (Math.random() * 100 - 50);
+                oscillator.type = 'triangle';
+                
+                gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
+                
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + 0.3);
+            }, i * 80);
+        }
+        
+        // Som de "caixa registradora" após as moedas
+        setTimeout(() => {
+            this.playCashRegisterSound();
+        }, 1000);
+    }
+    
+    playCashRegisterSound() {
+        if (!this.audioContext) return;
+        
+        // Som de caixa registradora - "cha-ching!"
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(1200, this.audioContext.currentTime + 0.1);
+        oscillator.frequency.exponentialRampToValueAtTime(600, this.audioContext.currentTime + 0.2);
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + 0.3);
+    }
+    
+    playFunGameOverSound() {
+        if (!this.audioContext) return;
+        
+        // Som divertido de Game Over - não triste!
+        const funSequence = [440, 370, 330, 277, 220]; // Descendente mas alegre
+        
+        funSequence.forEach((freq, index) => {
+            setTimeout(() => {
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+                
+                oscillator.frequency.value = freq;
+                oscillator.type = 'triangle';
+                
+                gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+                
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + 0.2);
+            }, index * 150);
+        });
+    }
+    
+    createGameOverParticles(container) {
+        // Criar partículas vermelhas para Game Over
+        const particleContainer = document.createElement('div');
+        particleContainer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 50%;
+            overflow: hidden;
+        `;
+        
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 6px;
+                    height: 6px;
+                    background: radial-gradient(circle, #FF0000 0%, #FF6666 100%);
+                    border-radius: 50%;
+                    left: ${30 + Math.random() * 40}%;
+                    top: ${30 + Math.random() * 40}%;
+                    animation: gameOverParticle ${1 + Math.random() * 1}s ease-out forwards;
+                    box-shadow: 0 0 5px #FF0000;
+                `;
+                
+                particleContainer.appendChild(particle);
+                
+                // Remover partícula após animação
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 2000);
+            }, i * 100);
+        }
+        
+        container.appendChild(particleContainer);
+    }
+    
+    createSlotMachineLights(container) {
+        // Criar luzes piscando na borda do círculo
+        const lightContainer = document.createElement('div');
+        lightContainer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        `;
+        
+        // Luzes na borda circular
+        for (let i = 0; i < 12; i++) {
+            const light = document.createElement('div');
+            const angle = (i / 12) * Math.PI * 2;
+            const radius = 45; // 45% do raio do círculo
+            const x = 50 + Math.cos(angle) * radius;
+            const y = 50 + Math.sin(angle) * radius;
             
-            // Iniciar celebração
-            this.celebrateGameOver();
-        }, 2000);
+            light.style.cssText = `
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                background: radial-gradient(circle, #FFD700 0%, transparent 70%);
+                border-radius: 50%;
+                left: ${x}%;
+                top: ${y}%;
+                transform: translate(-50%, -50%);
+                animation: slotLightBlink ${0.3 + Math.random() * 0.4}s ease-in-out infinite alternate;
+                animation-delay: ${Math.random() * 1.5}s;
+                box-shadow: 0 0 10px #FFD700;
+            `;
+            
+            lightContainer.appendChild(light);
+        }
+        
+        container.appendChild(lightContainer);
+    }
+    
+    createFallingCoins(container) {
+        // Criar moedas caindo dentro do círculo
+        const coinContainer = document.createElement('div');
+        coinContainer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            border-radius: 50%;
+            overflow: hidden;
+        `;
+        
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                const coin = document.createElement('div');
+                coin.style.cssText = `
+                    position: absolute;
+                    width: 12px;
+                    height: 12px;
+                    background: radial-gradient(circle, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+                    border-radius: 50%;
+                    left: ${20 + Math.random() * 60}%;
+                    top: -20px;
+                    animation: coinFallCircle ${1.5 + Math.random() * 1}s linear forwards;
+                    box-shadow: 
+                        0 0 5px #FFD700,
+                        inset 0 0 2px rgba(255, 255, 255, 0.3);
+                `;
+                
+                // Adicionar símbolo de moeda
+                coin.innerHTML = '💰';
+                coin.style.fontSize = '8px';
+                coin.style.display = 'flex';
+                coin.style.alignItems = 'center';
+                coin.style.justifyContent = 'center';
+                
+                coinContainer.appendChild(coin);
+                
+                // Remover moeda após animação
+                setTimeout(() => {
+                    if (coin.parentNode) {
+                        coin.parentNode.removeChild(coin);
+                    }
+                }, 3000);
+            }, i * 150);
+        }
+        
+        container.appendChild(coinContainer);
+    }
+    
+    testJackpotAnimation() {
+        console.log('🎰 TESTE: Criando animação JACKPOT simplificada...');
+        
+        // Criar container simples para teste
+        const testContainer = document.createElement('div');
+        testContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 215, 0, 0.8);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 4rem;
+            font-weight: bold;
+        `;
+        
+        testContainer.innerHTML = `
+            <div style="font-size: 6rem; color: #FFD700; text-shadow: 0 0 20px #FFD700;">JACKPOT!</div>
+            <div style="font-size: 3rem; color: #00FF00; margin-top: 20px;">NOVO RECORDE!</div>
+            <div style="font-size: 2rem; color: #000; margin-top: 20px;">TESTE FUNCIONANDO!</div>
+        `;
+        
+        document.body.appendChild(testContainer);
+        console.log('🎰 TESTE: Container de teste adicionado!');
+        
+        // Remover após 3 segundos
+        setTimeout(() => {
+            if (testContainer.parentNode) {
+                testContainer.parentNode.removeChild(testContainer);
+                console.log('🎰 TESTE: Container de teste removido!');
+            }
+        }, 3000);
     }
     
     resetGame() {
@@ -597,6 +1174,7 @@ class GeniusGame {
         this.isShowingSequence = false;
         this.currentIndex = 0;
         this.speed = 800;
+        this.keysDisabled = false;
         this.sequenceLength = 0;
         this.gameOver = false;
         this.readyForRestart = false;
@@ -614,28 +1192,49 @@ class GeniusGame {
         });
         
         this.updateDisplay();
-        this.statusElement.textContent = 'SYSTEM READY - PRESS ANY KEY TO INITIALIZE';
+        this.statusElement.textContent = '';
         this.statusElement.classList.remove('new-record');
         document.body.classList.remove('new-record');
         
         // Mostrar mensagem pulsante
-        this.startMessage.classList.add('show');
+        if (this.startMessage) {
+            console.log('Mostrando mensagem pulsante...');
+            this.startMessage.classList.add('show');
+            console.log('Classe show adicionada:', this.startMessage.classList.contains('show'));
+        } else {
+            console.log('Elemento startMessage não encontrado');
+        }
     }
     
     updateDisplay() {
-        // Adicionar animação de LED quando o score aumenta
-        if (this.score > 0) {
-            this.scoreElement.classList.add('score-increase');
-            setTimeout(() => {
-                this.scoreElement.classList.remove('score-increase');
-            }, 800);
+        console.log('updateDisplay chamado - Score:', this.score, 'Record:', this.record, 'Level:', this.level);
+        
+        // Atualizar score se o elemento existir
+        if (this.scoreElement) {
+            // Adicionar animação de LED quando o score aumenta
+            if (this.score > 0) {
+                this.scoreElement.classList.add('score-increase');
+                setTimeout(() => {
+                    this.scoreElement.classList.remove('score-increase');
+                }, 800);
+            }
+            this.scoreElement.textContent = this.score;
+            console.log('Score atualizado para:', this.score);
+        } else {
+            console.log('scoreElement não encontrado');
         }
         
-        this.scoreElement.textContent = this.score;
-        this.recordElement.textContent = this.record;
-        this.levelElement.textContent = this.level;
+        // Atualizar record se o elemento existir
+        if (this.recordElement) {
+            this.recordElement.textContent = this.record;
+            console.log('Record atualizado para:', this.record);
+        } else {
+            console.log('recordElement não encontrado');
+        }
         
-        console.log('Display atualizado - Score:', this.score, 'Record:', this.record);
+        // Level não é exibido (dispensável)
+        
+        console.log('Display atualizado com sucesso');
     }
     
     testLocalStorage() {
@@ -654,7 +1253,13 @@ class GeniusGame {
     
     bindKeyboardEvents() {
         document.addEventListener('keydown', (e) => {
-            console.log('Tecla pressionada:', e.key, 'isPlaying:', this.isPlaying, 'gameOver:', this.gameOver);
+            console.log('Tecla pressionada:', e.key, 'isPlaying:', this.isPlaying, 'gameOver:', this.gameOver, 'keysDisabled:', this.keysDisabled);
+            
+            // Se as teclas estão desabilitadas (durante animação), ignorar
+            if (this.keysDisabled) {
+                console.log('Teclas desabilitadas durante animação');
+                return;
+            }
             
             // Se não estiver jogando, qualquer tecla inicia o jogo
             if (!this.isPlaying && !this.gameOver) {
@@ -953,19 +1558,28 @@ class GeniusGame {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
+            background: #000000;
+            color: #00ff00;
             padding: 30px 50px;
-            border-radius: 20px;
+            border-radius: 0;
             font-size: 2rem;
             font-weight: bold;
             text-align: center;
             z-index: 1000;
-            border: 3px solid #f6ad55;
-            box-shadow: 0 0 30px rgba(246, 173, 85, 0.8);
+            border: 4px solid #00ff00;
+            box-shadow: 
+                0 0 50px rgba(0, 255, 0, 0.8),
+                8px 8px 0px rgba(0, 255, 0, 0.3);
             animation: congratsPulse 2s ease-in-out infinite;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 
+                0 0 10px #00ff00,
+                0 0 20px #00ff00,
+                0 0 30px #00ff00;
         `;
-        congratsDiv.innerHTML = '🎉 PARABÉNS! 🎉<br>Pressione qualquer tecla para jogar novamente!';
+        congratsDiv.innerHTML = '*** PARABÉNS ***';
         
         document.body.appendChild(congratsDiv);
         
@@ -1303,6 +1917,12 @@ class GeniusGame {
             else if (e.key === 'F3') {
                 e.preventDefault();
                 this.openReportModal();
+            }
+            // F5 - Testar animação JACKPOT
+            else if (e.key === 'F5') {
+                e.preventDefault();
+                console.log('🎰 TESTE: Forçando animação JACKPOT!');
+                this.testJackpotAnimation();
             }
         });
         
@@ -1808,6 +2428,10 @@ class GeniusGame {
 // Inicializar o jogo quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new GeniusGame();
+    // Aguardar um frame para garantir que todos os elementos estejam prontos
+    requestAnimationFrame(() => {
+        window.game.resetGame(); // Inicializar o jogo no estado pronto
+    });
 });
 
 // Adicionar efeitos visuais extras
