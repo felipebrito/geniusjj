@@ -318,6 +318,12 @@ class GeniusGame {
             return;
         }
         
+        // Não permitir iniciar jogo durante configuração
+        if (this.isSequentialConfigMode) {
+            console.log('🎮 Jogo bloqueado - configuração do gamepad em andamento');
+            return;
+        }
+        
         // Limpar timer de inatividade se existir
         if (this.inactivityTimer) {
             clearTimeout(this.inactivityTimer);
@@ -671,6 +677,11 @@ class GeniusGame {
         this.gamepad = gamepads[this.gamepad.index] || null;
         
         if (!this.gamepad) return;
+        
+        // Se estiver em modo de configuração, não processar botões do jogo
+        if (this.isSequentialConfigMode) {
+            return;
+        }
         
         // Mapear botões do gamepad para botões do jogo usando mapeamento personalizado
         for (let i = 0; i < this.gamepad.buttons.length; i++) {
@@ -1613,6 +1624,14 @@ class GeniusGame {
     handleSequentialMapping(gamepadButtonIndex) {
         if (this.sequentialConfigStep < this.sequentialConfigOrder.length) {
             const currentColorNumber = this.sequentialConfigOrder[this.sequentialConfigStep];
+            
+            // Verificar se este botão do gamepad já foi mapeado
+            const alreadyMapped = Object.values(this.gamepadMapping).includes(gamepadButtonIndex);
+            if (alreadyMapped) {
+                this.showNotification(`❌ Botão ${gamepadButtonIndex} já foi mapeado! Use outro botão.`, 'error');
+                return;
+            }
+            
             this.gamepadMapping[currentColorNumber] = gamepadButtonIndex;
             
             const colorNames = ['', 'Vermelho', 'Branco', 'Âmbar', 'Azul', 'Amarelo', 'Verde'];
