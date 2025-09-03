@@ -553,17 +553,21 @@ class GeniusGame {
             this.updateDisplay();
             this.statusElement.textContent = `*** NEW HIGH SCORE *** SCORE: ${this.score} ***`;
             this.statusElement.classList.add('new-record');
+            document.body.classList.add('new-record');
             console.log('Novo recorde salvo:', this.score);
+            
+            // Remover a classe após a animação
+            setTimeout(() => {
+                document.body.classList.remove('new-record');
+            }, 3000);
         } else {
             this.statusElement.textContent = `GAME OVER - SCORE: ${this.score} | RECORD: ${this.record}`;
             this.statusElement.classList.remove('new-record');
+            document.body.classList.remove('new-record');
         }
         
         // Enviar Game Over para UDP
         this.sendGameOverToUDP(this.score, isNewRecord);
-        
-        // Mostrar o modal de status
-        this.gameStatus.style.display = 'block';
         
         // Efeito de game over
         this.buttons.forEach(button => {
@@ -608,9 +612,7 @@ class GeniusGame {
         this.updateDisplay();
         this.statusElement.textContent = 'SYSTEM READY - PRESS ANY KEY TO INITIALIZE';
         this.statusElement.classList.remove('new-record');
-        
-        // Mostrar o modal de status
-        this.gameStatus.style.display = 'block';
+        document.body.classList.remove('new-record');
     }
     
     updateDisplay() {

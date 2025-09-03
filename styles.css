@@ -16,7 +16,7 @@ body {
     position: relative;
 }
 
-/* Efeito de grid retro */
+/* Efeito de grid moderno colorido */
 body::before {
     content: '';
     position: fixed;
@@ -24,12 +24,108 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
-        linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+        linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 30px 30px, 30px 30px;
     pointer-events: none;
     z-index: 1;
+    animation: gridPulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes gridPulse {
+    0% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.6;
+        transform: scale(1.02);
+    }
+}
+
+/* Efeito adicional de partículas */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(0, 255, 0, 0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(0, 255, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255, 0, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 0, 0.3), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(255, 0, 0, 0.3), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    pointer-events: none;
+    z-index: 1;
+    animation: particleFloat 12s linear infinite;
+}
+
+@keyframes particleFloat {
+    0% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-10px) translateX(5px); }
+    50% { transform: translateY(-5px) translateX(-5px); }
+    75% { transform: translateY(-15px) translateX(3px); }
+    100% { transform: translateY(0px) translateX(0px); }
+}
+
+/* Efeito especial para novo recorde */
+body.new-record::before {
+    animation: recordExplosion 3s ease-out;
+}
+
+@keyframes recordExplosion {
+    0% {
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 60%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+            linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+    }
+    25% {
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 60%, rgba(255, 0, 255, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 0.2) 0%, transparent 70%),
+            linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+    }
+    50% {
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.5) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.5) 0%, transparent 50%),
+            radial-gradient(circle at 40% 60%, rgba(255, 0, 255, 0.5) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 0.4) 0%, transparent 70%),
+            radial-gradient(circle at 70% 30%, rgba(255, 0, 0, 0.3) 0%, transparent 60%),
+            linear-gradient(rgba(0, 255, 0, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 0, 0.15) 1px, transparent 1px);
+    }
+    75% {
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 60%, rgba(255, 0, 255, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 0.2) 0%, transparent 70%),
+            linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+    }
+    100% {
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 60%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+            linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+    }
 }
 
 .game-container {
@@ -55,7 +151,7 @@ body::before {
 .score-circle {
     width: 100vh;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.4);
     border: 8px solid #00ff00;
     border-radius: 50%;
     display: flex;
@@ -68,7 +164,7 @@ body::before {
         8px 8px 0px rgba(0, 255, 0, 0.3);
     position: relative;
     animation: ledPulse 2s ease-in-out infinite alternate;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1px);
 }
 
 @keyframes ledPulse {
