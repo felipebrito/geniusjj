@@ -406,6 +406,11 @@ class GeniusGame {
             // Enviar dados UDP ANTES de ativar o botão (usar índice 0-5)
             this.sendButtonActivationToUDP(buttonIndex, i, this.sequence.length);
             
+            // Debug do botão HTML sendo ativado
+            const buttonDataColor = button.dataset.color;
+            const buttonDataSound = button.dataset.sound;
+            console.log(`🎯 Botão HTML ativado: data-color="${buttonDataColor}", data-sound="${buttonDataSound}", classe="${button.className}"`);
+            
             // Ativar botão com animação
             button.classList.add('active');
             this.playSound(parseInt(button.dataset.sound));
