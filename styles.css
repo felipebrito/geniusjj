@@ -76,6 +76,229 @@ body::after {
     100% { transform: translateY(0px) translateX(0px); }
 }
 
+/* Efeito de transição - partículas brancas */
+body.transition-effect::after {
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 200px 60px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 240px 20px, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 280px 90px, rgba(255, 255, 255, 0.8), transparent);
+    animation: particleFloat 12s linear infinite, particleBlink 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes particleBlink {
+    0% { 
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    100% { 
+        opacity: 1;
+        transform: scale(3.1);
+    }
+}
+
+/* Efeito de cor do botão no fundo */
+body.button-flash::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--button-flash-color);
+    pointer-events: none;
+    z-index: 1;
+    animation: buttonFlash 0.3s ease-out;
+}
+
+@keyframes buttonFlash {
+    0% { 
+        opacity: 0; 
+    }
+    50% { 
+        opacity: 0.3; 
+    }
+    100% { 
+        opacity: 0; 
+    }
+}
+
+/* Animações de Game Over */
+@keyframes gameOverFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes gameOverFadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+@keyframes gameOverTitleExpand {
+    0% {
+        transform: scale(0.3) rotate(-10deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes gameOverScoreSlide {
+    0% {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animações de Jackpot */
+@keyframes jackpotEntrance {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-10deg);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes jackpotExit {
+    0% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8) rotate(10deg);
+    }
+}
+
+@keyframes jackpotTextPulse {
+    0% {
+        transform: scale(1);
+        text-shadow: 
+            0 0 20px currentColor,
+            0 0 40px currentColor,
+            0 0 60px currentColor;
+    }
+    100% {
+        transform: scale(1.05);
+        text-shadow: 
+            0 0 30px currentColor,
+            0 0 60px currentColor,
+            0 0 90px currentColor,
+            0 0 120px currentColor;
+    }
+}
+
+@keyframes jackpotConfettiFall {
+    0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Botão de Configuração */
+.config-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    border: 2px solid #63b3ed;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Indicador de Tempo de Inatividade */
+.inactivity-timer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    height: 90vw;
+    max-width: 95vh;
+    max-height: 95vh;
+    z-index: 1000;
+    display: none;
+    pointer-events: none;
+}
+
+.inactivity-timer svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.inactivity-timer circle {
+    fill: none;
+    stroke-width: 1;
+}
+
+.inactivity-timer .background {
+    stroke: rgba(255, 255, 255, 0.15);
+}
+
+.inactivity-timer .progress {
+    stroke: #ff6b6b;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.1s linear;
+}
+
+.config-button:hover {
+    background: linear-gradient(135deg, #63b3ed 0%, #4a5568 100%);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(99, 179, 237, 0.4);
+}
+
+.config-button:active {
+    transform: scale(0.95);
+}
+
 /* Mensagem de início pulsante */
 .start-message {
     position: fixed;
@@ -201,20 +424,16 @@ body.new-record::before {
 .score-circle {
     width: 100vh;
     height: 100vh;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
-    border: 8px solid #00ff00;
-    border-radius: 50%;
+  
+   
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 
-        0 0 50px rgba(0, 255, 0, 0.8),
-        inset 0 0 50px rgba(0, 255, 0, 0.1),
-        8px 8px 0px rgba(0, 255, 0, 0.3);
+    
     position: relative;
     animation: ledPulse 2s ease-in-out infinite alternate;
-    backdrop-filter: blur(1px);
+   
 }
 
 @keyframes ledPulse {
@@ -453,14 +672,33 @@ body.new-record::before {
 }
 
 .status-text {
-    font-size: 1.5rem;
-    color: #00ff00;
+    font-size: 4.5rem;
+    color: #ffffff;
     margin-bottom: 15px;
-    text-shadow: 0 0 5px #00ff00;
+    text-shadow: 0 0 5px #ffffff;
     font-weight: 600;
     font-family: 'Courier New', monospace;
     text-transform: uppercase;
     letter-spacing: 2px;
+    animation: statusPulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes statusPulse {
+    0% {
+        text-shadow: 
+            0 0 5px #ffffff,
+            0 0 10px #00ff73,
+            0 0 15px #ffffff;
+        transform: scale(1);
+    }
+    100% {
+        text-shadow: 
+            0 0 15px #ffffff,
+            0 0 30px #ffffff,
+            0 0 45px #ffffff,
+            0 0 60px #00ff62;
+        transform: scale(1.05);
+    }
 }
 
 .level-display {
@@ -566,10 +804,10 @@ body.new-record::before {
 
 @keyframes glow {
     0%, 100% {
-        box-shadow: 0 0 20px rgba(99, 179, 237, 0.3);
+        /* box-shadow: 0 0 20px rgba(99, 179, 237, 0.3); */
     }
     50% {
-        box-shadow: 0 0 40px rgba(99, 179, 237, 0.6);
+        /* box-shadow: 0 0 40px rgba(99, 179, 237, 0.6); */
     }
 }
 
@@ -949,12 +1187,14 @@ body.new-record::before {
 
 .modal-content {
     background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-    margin: 5% auto;
+    margin: 2% auto;
     padding: 0;
     border: 2px solid #4a5568;
     border-radius: 15px;
-    width: 90%;
-    max-width: 600px;
+    width: 95%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     animation: modalSlideIn 0.3s ease-out;
 }
@@ -1006,8 +1246,10 @@ body.new-record::before {
 }
 
 .modal-body {
-    padding: 30px;
+    padding: 20px;
     color: white;
+    max-height: 70vh;
+    overflow-y: auto;
 }
 
 .modal-footer {
@@ -1020,8 +1262,8 @@ body.new-record::before {
 
 /* Seções de configuração */
 .config-section {
-    margin-bottom: 30px;
-    padding: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
     background: rgba(74, 85, 104, 0.2);
     border-radius: 10px;
     border: 1px solid rgba(99, 179, 237, 0.3);
@@ -1038,8 +1280,8 @@ body.new-record::before {
 .config-item {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
-    gap: 15px;
+    margin-bottom: 10px;
+    gap: 10px;
 }
 
 .config-item label {
@@ -1244,7 +1486,7 @@ body.new-record::before {
     }
     
     .status-text {
-        font-size: 1.2rem;
+        font-size: 2.5rem;
     }
     
     .level-display {
@@ -1327,7 +1569,7 @@ body.new-record::before {
     }
     
     .status-text {
-        font-size: 1rem;
+        font-size: 1.8rem;
     }
     
     .level-display {
